@@ -1,4 +1,4 @@
-package fr.uge.ifshare.rmi;
+package fr.uge.ifshare.rmi.common;
 
 public class Grade {
 	private float value;
