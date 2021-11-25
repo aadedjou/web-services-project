@@ -11,4 +11,5 @@ public interface IOnlineShop extends Remote {
     User registerUser(String firstName, String lastName, String password) throws RemoteException;
 
     User getUserById(String pseudo) throws RemoteException;
+    
 }

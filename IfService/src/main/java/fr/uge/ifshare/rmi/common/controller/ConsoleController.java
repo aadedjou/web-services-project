@@ -34,7 +34,7 @@ public class ConsoleController {
             System.out.print("> ");
             String selection = sc.nextLine();
 
-            for (var choice : choices) {
+            for (Choice choice : choices) {
                 if (choice.acceptedMatches().contains(selection)) {
                     selectedChoice = choice;
                     break;
@@ -54,7 +54,7 @@ public class ConsoleController {
         System.out.println("\n   " + message);
 
         System.out.print("> ");
-        var input = sc.nextLine();
+        String input = sc.nextLine();
 
         while (!condition.test(input) || input.equals("")) {
             if (!condition.test(input)) System.out.println(errorMessage(errorMessage));

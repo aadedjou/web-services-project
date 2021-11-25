@@ -37,33 +37,31 @@ public class IfServiceClientRMI {
     }
 
     private void tryLogin() {
-        var tmp = new Object() {
-            User user;
-        };
+        final User[] user = new User[1];
 
         inputString("Enter your IfService pseudo:",
           (p) -> {
               try {
-                  tmp.user = shopPlatform.getUserById(p);
+                  user[0] = shopPlatform.getUserById(p);
               } catch (RemoteException e) {
                   e.printStackTrace();
               }
-              return tmp.user != null;
+              return user[0] != null;
           },
           "No user with this pseudo was found. Please retry."
         );
 
         inputString("Enter your password:",
-          (p) -> tmp.user.getPassword().equals(p),
-          "Wrong password for '" + tmp.user.getPseudo() + "'"
+          (p) -> user[0].getPassword().equals(p),
+          "Wrong password for '" + user[0].getPseudo() + "'"
         );
-        loginAs(tmp.user);
+        loginAs(user[0]);
     }
 
     private void registerAndLogin() {
-        var firstName = inputString("Enter your first name:");
-        var lastName = inputString("Now enter your last name:");
-        var password = inputString("Choose a password:");
+        String firstName = inputString("Enter your first name:");
+        String lastName = inputString("Now enter your last name:");
+        String password = inputString("Choose a password:");
         try {
             loginAs(shopPlatform.registerUser(firstName, lastName, password));
         } catch (RemoteException e) {
@@ -94,7 +92,7 @@ public class IfServiceClientRMI {
     }
 
     public static void main(String[] args) throws MalformedURLException, NotBoundException, RemoteException {
-        var client = new IfServiceClientRMI((IOnlineShop) Naming.lookup("onlineshop"));
+        IfServiceClientRMI client = new IfServiceClientRMI((IOnlineShop) Naming.lookup("onlineshop"));
         client.displayMainMenu();
     }
 }

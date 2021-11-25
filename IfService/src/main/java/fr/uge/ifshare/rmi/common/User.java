@@ -46,6 +46,10 @@ public class User implements Serializable {
     public List<Product> getProducts() {
         return products;
     }
+    
+	public boolean hasProduct(Product p) {
+		return this.products.contains(p);
+	}
 
     @Override
     public String toString() {

@@ -15,7 +15,7 @@ public class IfServiceServerRMI {
     }
 
     public static void main(String[] args) throws AlreadyBoundException, RemoteException, MalformedURLException {
-        var serv = new IfServiceServerRMI();
+        IfServiceServerRMI serv = new IfServiceServerRMI();
 
         LocateRegistry.createRegistry(1099);
         Naming.bind("onlineshop", serv.shop);

@@ -23,13 +23,18 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 				.collect(Collectors.toList());
 	}
 
+	/*
+	 * Etape 1 : Voir si le produit existe déjà
+	 * Etape 2a : Si il existe déjà, on incrémente la quantité
+	 * Etape 2b : Si il n'existe pas, on ajoute une nouvelle Map.Entry du produit avec 1 en valeur (quantité)
+	 */
 	@Override
 	public void sellProduct(User user, Product product) {
 	}
 
 	@Override
 	public User registerUser(String firstName, String lastName, String password) throws RemoteException {
-		var user = new User(firstName, lastName, password);
+		User user = new User(firstName, lastName, password);
 		users.add(user);
 		return user;
 	}
@@ -46,4 +51,22 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	public String toString() {
 		return users.toString();
 	}
+	
+	
+	/*
+	 * Etape 1 : Voir si le produit existe déjà
+	 * Etape 2a : Si il existe déjà, on cherche le User qui l'a, et on lui supprime le produit, et on ajoute à l'acheteur
+	 * Etape 2b : Si il n'existe pas, exception ? ou autre
+	 */
+	
+	public void buyProduct(User user, Product product) {
+		/*if (getEveryProduct().contains(product)) {
+			users.stream()
+					.filter(user -> user.hasProduct(product))
+					.collect(Collectors.toList());
+			user.buyProduct(product);
+			
+		}*/
+	}
+	
 }
