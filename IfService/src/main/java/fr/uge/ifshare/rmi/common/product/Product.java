@@ -1,4 +1,4 @@
-package fr.uge.ifshare.rmi.common;
+package fr.uge.ifshare.rmi.common.product;
 
 import java.util.ArrayList;
 import java.util.List;
