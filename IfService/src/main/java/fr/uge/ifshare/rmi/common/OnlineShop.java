@@ -7,29 +7,19 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	private final List<User> users = new ArrayList<>();
+	private final List<Advertising> advertisings = new ArrayList<>();
 
 	public OnlineShop() throws RemoteException {
 		registerUser("Sami", "Ben Chakal", "dev");
-		registerUser("SÃ©bastien", "PÃ©tanque", "dev");
+		registerUser("Sebastien", "Petanque", "dev");
 	}
 
-	public List<Product> getEveryProduct() {
-		return users.stream()
-				.flatMap(user -> user.getProducts().stream())
-				.collect(Collectors.toList());
-	}
-
-	/*
-	 * Etape 1 : Voir si le produit existe déjà
-	 * Etape 2a : Si il existe déjà, on incrémente la quantité
-	 * Etape 2b : Si il n'existe pas, on ajoute une nouvelle Map.Entry du produit avec 1 en valeur (quantité)
-	 */
 	@Override
-	public void sellProduct(User user, Product product) {
+	public void createAd(User user, Product product) throws RemoteException {
+
 	}
 
 	@Override
@@ -51,13 +41,6 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	public String toString() {
 		return users.toString();
 	}
-	
-	
-	/*
-	 * Etape 1 : Voir si le produit existe déjà
-	 * Etape 2a : Si il existe déjà, on cherche le User qui l'a, et on lui supprime le produit, et on ajoute à l'acheteur
-	 * Etape 2b : Si il n'existe pas, exception ? ou autre
-	 */
 	
 	public void buyProduct(User user, Product product) {
 		/*if (getEveryProduct().contains(product)) {

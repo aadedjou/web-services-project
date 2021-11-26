@@ -6,7 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IOnlineShop extends Remote {
-    void sellProduct(User user, Product product) throws RemoteException; // date !!
+    void createAd(User user, Product product) throws RemoteException; // date !!
 
     User registerUser(String firstName, String lastName, String password) throws RemoteException;
 
