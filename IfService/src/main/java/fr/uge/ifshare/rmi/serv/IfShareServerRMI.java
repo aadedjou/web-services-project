@@ -8,14 +8,14 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-public class IfServiceServerRMI {
+public class IfShareServerRMI {
 	private final OnlineShop shop = new OnlineShop();
 
-	public IfServiceServerRMI() throws RemoteException {
+	public IfShareServerRMI() throws RemoteException {
     }
 
     public static void main(String[] args) throws AlreadyBoundException, RemoteException, MalformedURLException {
-        IfServiceServerRMI serv = new IfServiceServerRMI();
+        IfShareServerRMI serv = new IfShareServerRMI();
 
         LocateRegistry.createRegistry(1099);
         Naming.bind("onlineshop", serv.shop);

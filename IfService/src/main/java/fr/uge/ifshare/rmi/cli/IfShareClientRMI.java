@@ -3,21 +3,22 @@ package fr.uge.ifshare.rmi.cli;
 import fr.uge.ifshare.rmi.common.IOnlineShop;
 import fr.uge.ifshare.rmi.common.User;
 import fr.uge.ifshare.rmi.common.controller.Choice;
+import fr.uge.ifshare.rmi.common.controller.ConsoleController;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.Objects;
 
-import static fr.uge.ifshare.rmi.common.controller.ConsoleController.displayMenu;
-import static fr.uge.ifshare.rmi.common.controller.ConsoleController.inputString;
-
-public class IfServiceClientRMI {
+public class IfShareClientRMI {
+    private final ConsoleController controller;
     private final IOnlineShop shopPlatform;
     private User sessionUser;
 
-    private IfServiceClientRMI(IOnlineShop shop) {
+    private IfShareClientRMI(IOnlineShop shop, ConsoleController controller) {
+        this.controller = controller;
         this.shopPlatform = shop;
     }
 
@@ -39,7 +40,7 @@ public class IfServiceClientRMI {
     private void tryLogin() {
         final User[] user = new User[1];
 
-        inputString("Enter your IfService pseudo:",
+        controller.inputString("Enter your IfService pseudo:",
           (p) -> {
               try {
                   user[0] = shopPlatform.getUserById(p);
@@ -51,7 +52,7 @@ public class IfServiceClientRMI {
           "No user with this pseudo was found. Please retry."
         );
 
-        inputString("Enter your password:",
+        controller.inputString("Enter your password:",
           (p) -> user[0].getPassword().equals(p),
           "Wrong password for '" + user[0].getPseudo() + "'"
         );
@@ -59,9 +60,9 @@ public class IfServiceClientRMI {
     }
 
     private void registerAndLogin() {
-        String firstName = inputString("Enter your first name:");
-        String lastName = inputString("Now enter your last name:");
-        String password = inputString("Choose a password:");
+        String firstName = controller.inputString("Enter your first name:");
+        String lastName = controller.inputString("Now enter your last name:");
+        String password = controller.inputString("Choose a password:");
         try {
             loginAs(shopPlatform.registerUser(firstName, lastName, password));
         } catch (RemoteException e) {
@@ -70,7 +71,7 @@ public class IfServiceClientRMI {
     }
 
     private void displayMainMenu() {
-        displayMenu(
+        controller.displayMenu(
           "Welcome to the IfShare Shop !\n" +
             "Please login or register to access our services.",
           new Choice("Login", this::tryLogin),
@@ -81,7 +82,7 @@ public class IfServiceClientRMI {
 
     private void displayShopMenu() {
         Objects.requireNonNull(sessionUser);
-        displayMenu(
+        controller.displayMenu(
           "Welcome back, " + sessionUser.getShortenFullName() + " !\n" +
             "What can we do for you ?",
           new Choice("Do some shopping"),
@@ -92,7 +93,10 @@ public class IfServiceClientRMI {
     }
 
     public static void main(String[] args) throws MalformedURLException, NotBoundException, RemoteException {
-        IfServiceClientRMI client = new IfServiceClientRMI((IOnlineShop) Naming.lookup("onlineshop"));
+        ConsoleController controller = Arrays.asList(args).contains("-c") ?
+                                         ConsoleController.colored() :
+                                         ConsoleController.standard();
+        IfShareClientRMI client = new IfShareClientRMI((IOnlineShop) Naming.lookup("onlineshop"), controller);
         client.displayMainMenu();
     }
 }
