@@ -29,6 +29,10 @@ public class Choice {
         return label.substring(0, hintSize);
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     public String getLabelWithoutHint() {
         return label.substring(hintSize);
     }
@@ -38,7 +42,7 @@ public class Choice {
     }
 
     public ArrayList<String> acceptedMatches() {
-    	ArrayList<String> res = new ArrayList<String>();
+    	ArrayList<String> res = new ArrayList<>();
         res.add(label);
         res.add(label.toLowerCase());
         res.add(label.toUpperCase(Locale.ROOT));
@@ -58,9 +62,7 @@ class ChoiceSet implements Iterable<Choice> {
 
     private ChoiceSet(Choice... choices) {
     	this.choices = new LinkedHashSet<>();
-    	for (Choice c : choices) {
-    		this.choices.add(c);
-    	}
+        this.choices.addAll(Arrays.asList(choices));
         this.choices.forEach(Objects::requireNonNull);
         ensureNoDuplicateHints();
     }

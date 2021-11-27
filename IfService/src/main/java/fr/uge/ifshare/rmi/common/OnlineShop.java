@@ -7,16 +7,17 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
-	private final List<User> users = new ArrayList<>();
-	private List<Advertising> advertisings = new ArrayList<Advertising>();
-	
+
+	private final List<IUser> users = new ArrayList<>();
+	private final List<Advertising> advertisings = new ArrayList<>();
+
 	public OnlineShop() throws RemoteException {
 		registerUser("Sami", "Ben Chakal", "dev");
-		registerUser("SÃ©bastien", "PÃ©tanque", "dev");
+		registerUser("Sebastien", "Petanque", "dev");
 	}
+
 
 	/*
 	public List<Product> getEveryProduct() {
@@ -35,7 +36,7 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	 * Etape 2b : Si il n'existe pas, on ajoute une nouvelle Map.Entry du produit avec 1 en valeur (quantité)
 	 */
 	@Override
-	public void createAdvertising(User user, Product product, int quantity, float price, String desc) {
+	public void createAdvertising(IUser user, Product product, int quantity, float price, String desc) {
 		Advertising ad = new Advertising(product, user.getPseudo(), quantity, price, desc);
 		if (!adCanBeCreated(ad)) {
 			adCanBeCreated(ad);
@@ -56,25 +57,26 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	}
 
 	@Override
-	public User registerUser(String firstName, String lastName, String password) throws RemoteException {
-		User user = new User(firstName, lastName, password);
+	public IUser registerUser(String firstName, String lastName, String password) throws RemoteException {
+		IUser user = new User(firstName, lastName, password);
 		users.add(user);
 		return user;
 	}
 
 	@Override
-	public User getUserById(String pseudo) throws RemoteException {
+	public IUser getUserById(String pseudo) throws RemoteException {
 		return users.stream()
 		.filter(u -> u.getPseudo()
 		.equals(Objects.requireNonNull(pseudo))).findFirst()
 		.orElse(null);
 	}
-
+	
 	@Override
 	public String toString() {
 		return users.toString();
 	}
 	
+
 	
 	/*
 	 * Etape 1 : Voir si le produit existe déjà
@@ -91,6 +93,6 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 			user.buyProduct(product);
 			
 		}*/
-	} 
+	}
 	
 }
