@@ -43,7 +43,6 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 		else {
 			advertisings.add(ad);
 		}
-		
 	}
 
 	private boolean adCanBeCreated(Advertising ad) {
