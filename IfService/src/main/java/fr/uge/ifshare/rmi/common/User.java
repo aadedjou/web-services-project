@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class User implements Serializable {
-    private final List<Product> products = new ArrayList<>();
     private final String firstName;
     private final String lastName;
     private final String password;
@@ -43,13 +42,14 @@ public class User implements Serializable {
         return pseudo;
     }
 
+    /*
     public List<Product> getProducts() {
         return products;
     }
     
 	public boolean hasProduct(Product p) {
 		return this.products.contains(p);
-	}
+	}*/
 
     @Override
     public String toString() {

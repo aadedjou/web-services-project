@@ -11,16 +11,22 @@ import java.util.stream.Collectors;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	private final List<User> users = new ArrayList<>();
-
+	private List<Advertising> advertisings = new ArrayList<Advertising>();
+	
 	public OnlineShop() throws RemoteException {
 		registerUser("Sami", "Ben Chakal", "dev");
 		registerUser("Sébastien", "Pétanque", "dev");
 	}
 
+	/*
 	public List<Product> getEveryProduct() {
 		return users.stream()
 				.flatMap(user -> user.getProducts().stream())
 				.collect(Collectors.toList());
+	}*/
+	
+	public List<Advertising> getAdvertisings() {
+		return advertisings;
 	}
 
 	/*
@@ -29,7 +35,25 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	 * Etape 2b : Si il n'existe pas, on ajoute une nouvelle Map.Entry du produit avec 1 en valeur (quantit�)
 	 */
 	@Override
-	public void sellProduct(User user, Product product) {
+	public void createAdvertising(User user, Product product, int quantity, float price, String desc) {
+		Advertising ad = new Advertising(product, user.getPseudo(), quantity, price, desc);
+		if (!adCanBeCreated(ad)) {
+			adCanBeCreated(ad);
+		}
+		else {
+			advertisings.add(ad);
+		}
+		
+	}
+
+	private boolean adCanBeCreated(Advertising ad) {
+		for (Advertising adv : advertisings) {
+			if (adv.equals(ad)) {
+				adv.updateAdQuantity(ad.getQuantity());
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -59,6 +83,7 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	 * Etape 2b : Si il n'existe pas, exception ? ou autre
 	 */
 	
+	@Override
 	public void buyProduct(User user, Product product) {
 		/*if (getEveryProduct().contains(product)) {
 			users.stream()
@@ -67,6 +92,6 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 			user.buyProduct(product);
 			
 		}*/
-	}
+	} 
 	
 }
