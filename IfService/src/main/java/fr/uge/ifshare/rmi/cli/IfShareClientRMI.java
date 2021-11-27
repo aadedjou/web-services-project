@@ -1,7 +1,7 @@
 package fr.uge.ifshare.rmi.cli;
 
 import fr.uge.ifshare.rmi.common.IOnlineShop;
-import fr.uge.ifshare.rmi.common.User;
+import fr.uge.ifshare.rmi.common.IUser;
 import fr.uge.ifshare.rmi.common.controller.Choice;
 import fr.uge.ifshare.rmi.common.controller.ConsoleController;
 
@@ -15,14 +15,14 @@ import java.util.Objects;
 public class IfShareClientRMI {
     private final ConsoleController controller;
     private final IOnlineShop shopPlatform;
-    private User sessionUser;
+    private IUser sessionUser;
 
     private IfShareClientRMI(IOnlineShop shop, ConsoleController controller) {
         this.controller = controller;
         this.shopPlatform = shop;
     }
 
-    private void loginAs(User user) {
+    private void loginAs(IUser user) {
         sessionUser = Objects.requireNonNull(user);
         displayShopMenu();
     }
@@ -38,7 +38,7 @@ public class IfShareClientRMI {
     }
 
     private void tryLogin() {
-        final User[] user = new User[1];
+        final IUser[] user = new IUser[1];
 
         controller.inputString("Enter your IfService pseudo:",
           (p) -> {

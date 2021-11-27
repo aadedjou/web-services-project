@@ -4,12 +4,15 @@ import fr.uge.ifshare.rmi.common.product.Product;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface IOnlineShop extends Remote {
-    void createAd(User user, Product product) throws RemoteException; // date !!
+    void createAd(IUser user, Product product) throws RemoteException; // date !!
 
-    User registerUser(String firstName, String lastName, String password) throws RemoteException;
+    IUser registerUser(String firstName, String lastName, String password) throws RemoteException;
 
-    User getUserById(String pseudo) throws RemoteException;
+    IUser getUserById(String pseudo) throws RemoteException;
+    
+    List<Advertising> getAdvertising();
     
 }
