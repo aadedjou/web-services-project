@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+
 public class User implements Serializable, IUser {
-    private final List<Product> products = new ArrayList<>();
     private final String firstName;
     private final String lastName;
     private final String password;
@@ -44,14 +44,16 @@ public class User implements Serializable, IUser {
         return pseudo;
     }
 
+    /*
     public List<Product> getProducts() {
         return products;
     }
     
 	public boolean hasProduct(Product p) {
 		return this.products.contains(p);
-	}
+	}*/
 
+    /*
 	public Optional<Product> getProduct(Product p) {
 		if (hasProduct(p)) {
 			int index = products.indexOf(p);
@@ -67,9 +69,10 @@ public class User implements Serializable, IUser {
 		products.add(p);
 		return true;
 	}
-	
+	*/
     @Override
     public String toString() {
         return getPseudo();
     }
+
 }

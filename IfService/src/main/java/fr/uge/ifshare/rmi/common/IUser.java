@@ -11,9 +11,5 @@ public interface IUser {
     public String getShortenFullName();
     public String getPassword();
     public String getPseudo();
-	
-	List<Product> getProducts();
-	boolean hasProduct(Product p);
-	Optional<Product> getProduct(Product p);
-	boolean addProduct(Product p);
+
 }
