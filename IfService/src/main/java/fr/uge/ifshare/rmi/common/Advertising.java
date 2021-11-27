@@ -17,7 +17,7 @@ public class Advertising {
     private float price;
     private final List<Grade> grades = new ArrayList<>();
 	private final String desc;
-	private ArrayList<User> usersWaitingForProduct = new ArrayList<User>();
+	private ArrayList<IUser> usersWaitingForProduct = new ArrayList<IUser>();
 	
     public Advertising(Product product, String sellerPseudo, int quantity, float price, String desc) {
     	if (quantity < 0) {

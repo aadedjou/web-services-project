@@ -11,13 +11,11 @@ import java.util.Objects;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	private final List<IUser> users = new ArrayList<>();
-	private final List<Advertising> advertisings = new ArrayList<>();
-
-
+	private List<Advertising> advertisings = new ArrayList<Advertising>();
+	
 	public OnlineShop() throws RemoteException {
 		registerUser("Sami", "Ben Chakal", "dev");
 		registerUser("Sebastien", "Petanque", "dev");
-		registerUser("Sébastien", "Pétanque", "dev");
 	}
 
 	/*
@@ -32,18 +30,17 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	}
 
 	/*
-	 * Etape 1 : Voir si le produit existe d�j�
-	 * Etape 2a : Si il existe d�j�, on incr�mente la quantit�
-	 * Etape 2b : Si il n'existe pas, on ajoute une nouvelle Map.Entry du produit avec 1 en valeur (quantit�)
+	 * Etape 1 : Voir si le produit existe déjà
+	 * Etape 2a : Si il existe déjà, on incrémente la quantité
+	 * Etape 2b : Si il n'existe pas, on ajoute une nouvelle Map.Entry du produit avec 1 en valeur (quantité)
 	 */
 	@Override
-	public void createAdvertising(User user, Product product, int quantity, float price, String desc) {
+	public void createAdvertising(IUser user, Product product, int quantity, float price, String desc) {
 		Advertising ad = new Advertising(product, user.getPseudo(), quantity, price, desc);
-		if (!adCanBeCreated(ad)) {
-			adCanBeCreated(ad);
-		}
-		else {
+		if (adCanBeCreated(ad)) {
 			advertisings.add(ad);
+		} else {
+			System.out.println("Ad already exist");
 		}
 		
 	}
@@ -59,13 +56,8 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	}
 
 	@Override
-	public void createAd(IUser user, Product product) throws RemoteException {
-
-	}
-
-	@Override
 	public IUser registerUser(String firstName, String lastName, String password) throws RemoteException {
-		IUser user = new User(firstName, lastName, password);
+		User user = new User(firstName, lastName, password);
 		users.add(user);
 		return user;
 	}
@@ -77,7 +69,7 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 		.equals(Objects.requireNonNull(pseudo))).findFirst()
 		.orElse(null);
 	}
-	
+
 	@Override
 	public String toString() {
 		return users.toString();
@@ -85,13 +77,13 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	
 	
 	/*
-	 * Etape 1 : Voir si le produit existe d�j�
-	 * Etape 2a : Si il existe d�j�, on cherche le User qui l'a, et on lui supprime le produit, et on ajoute � l'acheteur
+	 * Etape 1 : Voir si le produit existe déjà
+	 * Etape 2a : Si il existe déjà, on cherche le User qui l'a, et on lui supprime le produit, et on ajoute à l'acheteur
 	 * Etape 2b : Si il n'existe pas, exception ? ou autre
 	 */
 	
 	@Override
-	public void buyProduct(User user, Product product) {
+	public void buyProduct(IUser user, Product product) {
 		/*if (getEveryProduct().contains(product)) {
 			users.stream()
 					.filter(user -> user.hasProduct(product))
@@ -99,10 +91,7 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 			user.buyProduct(product);
 			
 		}*/
-	} 
-	
-	public void sellProduct() {
-		
 	}
+
 	
 }
