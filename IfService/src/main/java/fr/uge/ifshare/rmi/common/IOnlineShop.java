@@ -13,6 +13,4 @@ public interface IOnlineShop extends Remote {
 
     IUser getUserById(String pseudo) throws RemoteException;
     
-    List<Advertising> getAdvertising();
-    
 }

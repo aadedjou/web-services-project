@@ -36,10 +36,6 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 		.equals(Objects.requireNonNull(pseudo))).findFirst()
 		.orElse(null);
 	}
-
-	public List<Advertising> getAdvertising() {
-		return advertisings;
-	}
 	
 	@Override
 	public String toString() {
