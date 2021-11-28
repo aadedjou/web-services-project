@@ -121,8 +121,14 @@ public class IfShareClientRMI {
 
         try {
             if (!shopPlatform.buyProduct(sessionUser, ad, qty)) {
+            	/* Demander au client si il veut etre averti ou non
+            	* Si oui, on crée un nouvel observer pour le client
+            	* Puis, on appelle (get) la liste des observers du client (UserObservers), et on ajoute avec la methode addNew...
+            	* Puis, on appelle la méthode d'enregistrement de l'observer du client : ad.register(<nouvel observer>);
+            	* Si non, bah rien
+            	*/
                 System.out.println("There are not enough of this product for the moment; You will be notified when " +
-                                     "it becomes available again. \n (" + ad.getWaitingList().size() + " users waiting)");
+                                     "it becomes available again. \n (" + ad.getObservers().size() + " users waiting)");
             }
             else if (qty > 1) {
                 System.out.println("Successfully bought (" + qty + ") " + ad.getProduct().getName() + " from " + ad.getSellerPseudo());

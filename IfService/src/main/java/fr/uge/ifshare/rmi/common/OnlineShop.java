@@ -50,7 +50,7 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 					);
 
 		if (!adv.hasSufficientQuantity(quantity)) {
-			adv.addUserToWaitForAvailability(user);
+			//adv.register(user.getUserObserver());
 			return false;
 		}
 		adv.updateAdQuantity(-quantity);

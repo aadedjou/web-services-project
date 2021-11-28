@@ -1,6 +1,8 @@
 package fr.uge.ifshare.rmi.common;
 
-public interface AdvertisingObserver {
+import java.rmi.Remote;
 
-	public void onAdvertisingUpdate();
+public interface AdvertisingObserver extends Remote {
+
+	public void onAdvertisingUpdate(IAdvertising ad);
 }

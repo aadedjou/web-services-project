@@ -8,10 +8,11 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class Advertising implements Serializable {
+public class Advertising implements Serializable, IAdvertising {
     //private final Category category;
     private static class Lock implements Serializable {
     }
@@ -23,9 +24,9 @@ public class Advertising implements Serializable {
     private float price;
     private final List<Rating> ratings = new ArrayList<>();
     private final String desc;
-    private ArrayList<IUser> waitingList = new ArrayList<IUser>();
+    private ArrayList<AdvertisingObserver> observers = new ArrayList<>();
     private final Lock lock = new Lock();
-    private AdvertisingObserver advObs;
+    
 
     public Advertising(Product product, String sellerPseudo, int quantity, float price, String desc) {
         if (quantity < 0) {
@@ -42,14 +43,28 @@ public class Advertising implements Serializable {
         this.quantity = quantity;
         // this.category = category;
     }
-
-    public ArrayList<IUser> getWaitingList() {
-        return waitingList;
+    
+    
+    public class AdvertisingNotifier {
+    	LinkedHashMap<IUser, Integer> registeredUsers = new LinkedHashMap<>();
+    	
+    	public void addUserForNotify(IUser user, int quantity) {
+    		registeredUsers.merge(user, quantity, Integer::sum);
+    	}
+    	
+    	public void sendMessageToUsers() {
+    		int tmpQuantity = quantity;
+    		while (tmpQuantity > 0) {
+    			
+    		}
+    	}
     }
 
-    public void register(AdvertisingObserver obs) {
-        advObs = obs;
+    public ArrayList<AdvertisingObserver> getObservers() {
+        return observers;
     }
+
+
 
     @Override
     public String toString() {
@@ -93,7 +108,7 @@ public class Advertising implements Serializable {
     public void updateAdQuantity(int quantity) {
         synchronized (lock) {
             if (this.quantity == 0 && quantity > 0) {
-                notifyAdvertisingUpdate();
+                notify();
             }
             this.quantity += quantity;
         }
@@ -103,13 +118,16 @@ public class Advertising implements Serializable {
         return this.quantity - quantity >= 0;
     }
 
-    public void addUserToWaitForAvailability(IUser u) {
-        this.waitingList.add(u);
+    
+    public void register(AdvertisingObserver obs) {
+        this.observers.add(obs);
     }
 
-    private void notifyAdvertisingUpdate() {
-        advObs.onAdvertisingUpdate();
-
+    public void unregister(AdvertisingObserver obs) {
+    	if (this.observers.contains(obs)) {
+    		throw new IllegalArgumentException("Unknown observer");
+    	}
+        this.observers.add(obs);
     }
 
 }
