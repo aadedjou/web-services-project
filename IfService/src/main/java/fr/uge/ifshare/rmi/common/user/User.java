@@ -1,4 +1,4 @@
-package fr.uge.ifshare.rmi.common;
+package fr.uge.ifshare.rmi.common.user;
 
 import java.io.Serializable;
 import java.text.Normalizer;
@@ -37,7 +37,6 @@ public class User implements Serializable, IUser {
     public String getPseudo() {
         return pseudo;
     }
-
 
     @Override
     public String toString() {
