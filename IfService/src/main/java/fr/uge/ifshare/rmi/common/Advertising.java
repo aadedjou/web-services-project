@@ -1,8 +1,8 @@
 package fr.uge.ifshare.rmi.common;
 
 import fr.uge.ifshare.rmi.common.product.Category;
-import fr.uge.ifshare.rmi.common.product.Grade;
 import fr.uge.ifshare.rmi.common.product.Product;
+import fr.uge.ifshare.rmi.common.product.Rating;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class Advertising {
     private final String sellerPseudo;
     private int quantity;
     private float price;
-    private final List<Grade> grades = new ArrayList<>();
+    private final List<Rating> ratings = new ArrayList<>();
 	private final String desc;
 	private ArrayList<IUser> usersWaitingForProduct = new ArrayList<IUser>();
 	private final Object lock = new Object();
