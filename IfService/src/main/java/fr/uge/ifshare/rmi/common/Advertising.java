@@ -27,12 +27,16 @@ public class Advertising {
     	if (quantity < 0) {
     		throw new IllegalStateException("You can't put a negative quantity");
     	}
+    	if (price < 0) {
+    		throw new IllegalStateException("You can't put a negative price");
+    	}
         this.date = new Date(System.currentTimeMillis());
         this.product = Objects.requireNonNull(product);
         this.sellerPseudo = Objects.requireNonNull(sellerPseudo);
-        this.desc = desc;
+        this.desc = Objects.requireNonNull(desc);
         this.price = price;
         this.quantity = quantity;
+        //this.category = category;
     }
 
 
