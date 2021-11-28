@@ -1,9 +1,10 @@
 package fr.uge.ifshare.rmi.cli;
 
 import fr.uge.ifshare.rmi.common.IOnlineShop;
-import fr.uge.ifshare.rmi.common.IUser;
+import fr.uge.ifshare.rmi.common.user.IUser;
 import fr.uge.ifshare.rmi.common.controller.Choice;
 import fr.uge.ifshare.rmi.common.controller.ConsoleController;
+import fr.uge.ifshare.rmi.common.user.IUserDatabase;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -15,11 +16,13 @@ import java.util.Objects;
 public class IfShareClientRMI {
     private final ConsoleController controller;
     private final IOnlineShop shopPlatform;
+    private final IUserDatabase users;
     private IUser sessionUser;
 
-    private IfShareClientRMI(IOnlineShop shop, ConsoleController controller) {
+    private IfShareClientRMI(IOnlineShop shop, IUserDatabase users, ConsoleController controller) {
         this.controller = controller;
         this.shopPlatform = shop;
+        this.users = users;
     }
 
     private void loginAs(IUser user) {
@@ -43,7 +46,7 @@ public class IfShareClientRMI {
         controller.inputString("Enter your IfService pseudo:",
           (p) -> {
               try {
-                  user[0] = shopPlatform.getUserById(p);
+                  user[0] = users.getUserById(p);
               } catch (RemoteException e) {
                   e.printStackTrace();
               }
@@ -64,7 +67,7 @@ public class IfShareClientRMI {
         String lastName = controller.inputString("Now enter your last name:");
         String password = controller.inputString("Choose a password:");
         try {
-            loginAs(shopPlatform.registerUser(firstName, lastName, password));
+            loginAs(users.registerUser(firstName, lastName, password));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -96,7 +99,10 @@ public class IfShareClientRMI {
         ConsoleController controller = Arrays.asList(args).contains("-c") ?
                                          ConsoleController.colored() :
                                          ConsoleController.standard();
-        IfShareClientRMI client = new IfShareClientRMI((IOnlineShop) Naming.lookup("onlineshop"), controller);
+
+        IOnlineShop shop = (IOnlineShop) Naming.lookup("onlineshop");
+        IUserDatabase users = (IUserDatabase) Naming.lookup("userdata");
+        IfShareClientRMI client = new IfShareClientRMI(shop, users, controller);
         client.displayMainMenu();
     }
 }

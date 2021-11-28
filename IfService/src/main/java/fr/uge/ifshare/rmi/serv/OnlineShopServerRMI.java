@@ -8,17 +8,17 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-public class IfShareServerRMI {
+public class OnlineShopServerRMI {
 	private final OnlineShop shop = new OnlineShop();
 
-	public IfShareServerRMI() throws RemoteException {
+	public OnlineShopServerRMI() throws RemoteException {
     }
 
     public static void main(String[] args) throws AlreadyBoundException, RemoteException, MalformedURLException {
-        IfShareServerRMI serv = new IfShareServerRMI();
+        OnlineShopServerRMI serv = new OnlineShopServerRMI();
 
         LocateRegistry.createRegistry(1099);
         Naming.bind("onlineshop", serv.shop);
-        System.out.println("RMI Server is running...");
+        System.out.println("OnlineShop RMI Server is running...");
     }
 }

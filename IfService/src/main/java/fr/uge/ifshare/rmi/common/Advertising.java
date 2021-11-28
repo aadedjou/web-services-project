@@ -1,8 +1,8 @@
 package fr.uge.ifshare.rmi.common;
 
-import fr.uge.ifshare.rmi.common.product.Category;
 import fr.uge.ifshare.rmi.common.product.Product;
 import fr.uge.ifshare.rmi.common.product.Rating;
+import fr.uge.ifshare.rmi.common.user.IUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

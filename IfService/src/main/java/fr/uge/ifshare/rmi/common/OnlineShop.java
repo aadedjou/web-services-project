@@ -1,21 +1,19 @@
 package fr.uge.ifshare.rmi.common;
 
 import fr.uge.ifshare.rmi.common.product.Product;
-import fr.uge.ifshare.rmi.common.IUser;
+import fr.uge.ifshare.rmi.common.user.IUser;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
-	private final List<IUser> users = new ArrayList<>();
 	private List<Advertising> advertisings = new ArrayList<Advertising>();
 	
 	public OnlineShop() throws RemoteException {
-		registerUser("Sami", "Ben Chakal", "dev");
-		registerUser("Sebastien", "Petanque", "dev");
+//		registerUser("Sami", "Ben Chakal", "dev");
+//		registerUser("Sebastien", "Petanque", "dev");
 	}
 	
 	public List<Advertising> getAdvertisings() {
@@ -42,26 +40,6 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 		}
 		return true;
 	}
-
-	@Override
-	public IUser registerUser(String firstName, String lastName, String password) throws RemoteException {
-		User user = new User(firstName, lastName, password);
-		users.add(user);
-		return user;
-	}
-
-	@Override
-	public IUser getUserById(String pseudo) throws RemoteException {
-		return users.stream()
-		.filter(u -> u.getPseudo()
-		.equals(Objects.requireNonNull(pseudo))).findFirst()
-		.orElse(null);
-	}
-
-	@Override
-	public String toString() {
-		return users.toString();
-	}
 	
 	
 	@Override
@@ -77,6 +55,4 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 			adv.addUserToWaitForAvailability(user);
 		}
 	}
-
-	
 }
