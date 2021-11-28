@@ -83,7 +83,17 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 	 */
 	
 	@Override
-	public void buyProduct(IUser user, Product product) {
+	public void buyProduct(IUser user, Advertising ad, int quantity) {
+		Advertising adv = advertisings.stream()
+					.filter(a -> a.equals(ad))
+					.findFirst()
+					.get();
+		if (adv.hasSufficientQuantity(quantity)) {
+			adv.updateAdQuantity(quantity);
+		}
+		else {
+			adv.addUserToWaitForAvailability(user);
+		}
 		/*if (getEveryProduct().contains(product)) {
 			users.stream()
 					.filter(user -> user.hasProduct(product))

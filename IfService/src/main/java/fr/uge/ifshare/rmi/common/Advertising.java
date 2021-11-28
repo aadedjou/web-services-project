@@ -1,5 +1,6 @@
 package fr.uge.ifshare.rmi.common;
 
+import fr.uge.ifshare.rmi.common.product.Category;
 import fr.uge.ifshare.rmi.common.product.Grade;
 import fr.uge.ifshare.rmi.common.product.Product;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Advertising {
+	//private final Category category;
     private final Product product;
     private final Date date; // transformer en vrai objet date
     private final String sellerPseudo;
@@ -18,6 +20,8 @@ public class Advertising {
     private final List<Grade> grades = new ArrayList<>();
 	private final String desc;
 	private ArrayList<IUser> usersWaitingForProduct = new ArrayList<IUser>();
+	private final Object lock = new Object();
+	private AdvertisingObserver advObs;
 	
     public Advertising(Product product, String sellerPseudo, int quantity, float price, String desc) {
     	if (quantity < 0) {
@@ -31,6 +35,12 @@ public class Advertising {
         this.quantity = quantity;
     }
 
+
+    public void register(AdvertisingObserver obs){
+        advObs = obs;
+    }
+    
+    @Override
     public String toString() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.format(date) + " - " + product + " - Desc : " + desc.substring(0, 5) + " - " + price + " - Quantity : " + quantity + " - " + sellerPseudo;
@@ -68,8 +78,26 @@ public class Advertising {
     
     
     public void updateAdQuantity(int quantity) {
-    	this.quantity += quantity;
+    	synchronized (lock) {
+    		if (this.quantity == 0 && quantity > 0) {
+    			notifyAdvertisingUpdate();
+    		}
+    		this.quantity += quantity;
+		}
     }
     
     
+	public boolean hasSufficientQuantity(int quantity) {
+    	return this.quantity - quantity >= 0;
+    }
+    
+    public void addUserToWaitForAvailability(IUser u) {
+    	this.usersWaitingForProduct.add(u);
+    }
+    
+    private void notifyAdvertisingUpdate() {
+		advObs.onAdvertisingUpdate();
+		
+	}
+
 }

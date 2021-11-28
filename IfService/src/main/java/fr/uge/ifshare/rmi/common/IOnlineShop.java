@@ -18,5 +18,5 @@ public interface IOnlineShop extends Remote {
 
     IUser getUserById(String pseudo) throws RemoteException;
     
-    void buyProduct(IUser user, Product product) throws RemoteException;
+    void buyProduct(IUser user, Advertising ad, int quantity) throws RemoteException;
 }
