@@ -7,4 +7,5 @@ public interface IUser {
     public String getPassword();
     public String getPseudo();
     //public UserObservers getUserObservers();
+	public void receiveMessage(String string);
 }

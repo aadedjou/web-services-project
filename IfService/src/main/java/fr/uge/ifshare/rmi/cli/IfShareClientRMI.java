@@ -124,8 +124,12 @@ public class IfShareClientRMI {
             	/* Demander au client si il veut etre averti ou non
             	* Si oui, on crée un nouvel observer pour le client
             	* Puis, on appelle (get) la liste des observers du client (UserObservers), et on ajoute avec la methode addNew...
-            	* Puis, on appelle la méthode d'enregistrement de l'observer du client : ad.register(<nouvel observer>);
+            	* Puis, on appelle la méthode d'enregistrement de l'observer du client : ad.addUserToNotify(sessionUser, qty);
             	* Si non, bah rien
+            	* 
+            	* METHODE 2 : Demander au client si il veut etre averti ou non.
+            	* Si oui : ad.addUserToNotify(sessionUser, qty);
+            	* Si non : rien
             	*/
                 System.out.println("There are not enough of this product for the moment; You will be notified when " +
                                      "it becomes available again. \n (" + ad.getObservers().size() + " users waiting)");

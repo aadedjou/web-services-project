@@ -87,6 +87,11 @@ public class User implements Serializable, IUser {
         return getPseudo();
     }
 
+	@Override
+	public void receiveMessage(String string) {
+		System.out.println(string);
+	}
+
     /*
 	@Override
 	public UserObservers getUserObservers() {

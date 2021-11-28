@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,7 @@ public class Advertising implements Serializable, IAdvertising {
     private final String desc;
     private ArrayList<AdvertisingObserver> observers = new ArrayList<>();
     private final Lock lock = new Lock();
-    
+    private AdvertisingNotifier advNotifier;
 
     public Advertising(Product product, String sellerPseudo, int quantity, float price, String desc) {
         if (quantity < 0) {
@@ -42,21 +43,19 @@ public class Advertising implements Serializable, IAdvertising {
         this.price = price;
         this.quantity = quantity;
         // this.category = category;
+        this.advNotifier = new AdvertisingNotifier();
     }
     
     
-    public class AdvertisingNotifier {
+    private class AdvertisingNotifier {
     	LinkedHashMap<IUser, Integer> registeredUsers = new LinkedHashMap<>();
     	
-    	public void addUserForNotify(IUser user, int quantity) {
+    	public void addUserToNotify(IUser user, int quantity) {
     		registeredUsers.merge(user, quantity, Integer::sum);
     	}
     	
-    	public void sendMessageToUsers() {
-    		int tmpQuantity = quantity;
-    		while (tmpQuantity > 0) {
-    			
-    		}
+    	public void sendMessageToFirstUser() {
+    		registeredUsers.keySet().iterator().next().receiveMessage("The product " + product.getName() + " is available !");
     	}
     }
 
@@ -108,7 +107,7 @@ public class Advertising implements Serializable, IAdvertising {
     public void updateAdQuantity(int quantity) {
         synchronized (lock) {
             if (this.quantity == 0 && quantity > 0) {
-                notify();
+                this.advNotifier.sendMessageToFirstUser();
             }
             this.quantity += quantity;
         }
@@ -128,6 +127,11 @@ public class Advertising implements Serializable, IAdvertising {
     		throw new IllegalArgumentException("Unknown observer");
     	}
         this.observers.add(obs);
+    }
+    
+    
+    public void addUserToNotify(IUser user, int quantity) {
+    	this.advNotifier.addUserToNotify(user, quantity);
     }
 
 }
