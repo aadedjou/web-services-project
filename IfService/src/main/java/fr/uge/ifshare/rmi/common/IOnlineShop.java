@@ -8,9 +8,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public interface IOnlineShop extends Remote {
-	/*
-    void sellProduct(User user, Product product) throws RemoteException; // date !!
-	 */
 	
 	void createAdvertising(IUser user, Product product, int quantity, float price, String desc) throws RemoteException;
 	
