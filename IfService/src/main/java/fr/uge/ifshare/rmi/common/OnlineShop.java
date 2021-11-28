@@ -7,15 +7,15 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
-	private List<Advertising> advertisings = new ArrayList<Advertising>();
+	private final List<Advertising> advertisings = new ArrayList<>();
 	
 	public OnlineShop() throws RemoteException {
-//		registerUser("Sami", "Ben Chakal", "dev");
-//		registerUser("Sebastien", "Petanque", "dev");
 	}
-	
+
+	@Override
 	public List<Advertising> getAdvertisings() {
 		return advertisings;
 	}
@@ -28,7 +28,6 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 		} else {
 			System.out.println("Ad already exist");
 		}
-		
 	}
 
 	private boolean adCanBeCreated(Advertising ad) {
@@ -40,19 +39,21 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 		}
 		return true;
 	}
-	
-	
-	@Override
-	public void buyProduct(IUser user, Advertising ad, int quantity) {
+
+	public boolean buyProduct(IUser user, Advertising ad, int quantity) {
+		Objects.requireNonNull(user);
 		Advertising adv = advertisings.stream()
 					.filter(a -> a.equals(ad))
 					.findFirst()
-					.get();
-		if (adv.hasSufficientQuantity(quantity)) {
-			adv.updateAdQuantity(quantity);
-		}
-		else {
+					.orElseThrow(() ->
+								 new IllegalArgumentException("Can't buy product from " + ad + " since it doesn't " + "exist")
+					);
+
+		if (!adv.hasSufficientQuantity(quantity)) {
 			adv.addUserToWaitForAvailability(user);
+			return false;
 		}
+		adv.updateAdQuantity(-quantity);
+		return true;
 	}
 }

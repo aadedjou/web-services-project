@@ -1,9 +1,10 @@
 package fr.uge.ifshare.rmi.cli;
 
+import fr.uge.ifshare.rmi.common.Advertising;
 import fr.uge.ifshare.rmi.common.IOnlineShop;
-import fr.uge.ifshare.rmi.common.user.IUser;
 import fr.uge.ifshare.rmi.common.controller.Choice;
 import fr.uge.ifshare.rmi.common.controller.ConsoleController;
+import fr.uge.ifshare.rmi.common.user.IUser;
 import fr.uge.ifshare.rmi.common.user.IUserDatabase;
 
 import java.net.MalformedURLException;
@@ -20,11 +21,12 @@ public class IfShareClientRMI {
     private IUser sessionUser;
 
     private IfShareClientRMI(IOnlineShop shop, IUserDatabase users, ConsoleController controller) {
-        this.controller = controller;
-        this.shopPlatform = shop;
-        this.users = users;
+        this.controller = Objects.requireNonNull(controller);
+        this.shopPlatform = Objects.requireNonNull(shop);
+        this.users = Objects.requireNonNull(users);
     }
 
+    // actions
     private void loginAs(IUser user) {
         sessionUser = Objects.requireNonNull(user);
         displayShopMenu();
@@ -40,6 +42,7 @@ public class IfShareClientRMI {
         System.exit(0);
     }
 
+    // menus
     private void tryLogin() {
         final IUser[] user = new IUser[1];
 
@@ -88,11 +91,45 @@ public class IfShareClientRMI {
         controller.displayMenu(
           "Welcome back, " + sessionUser.getShortenFullName() + " !\n" +
             "What can we do for you ?",
-          new Choice("Do some shopping"),
+          new Choice("Do some shopping", this::doShopping),
           new Choice("Sell a product"),
+          new Choice("My purchases"),
           new Choice("Disconnect from account", this::disconnectUser),
           new Choice("Exit", this::exitSession)
         );
+    }
+
+    private void doShopping() {
+        Advertising ad = null;
+        int qty = 1;
+
+        try {
+            ad = controller.displayMenu("Which of these products are you looking for ?   -   Your balance: ",
+              // TODO: add balance bank
+              shopPlatform.getAdvertisings());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        Objects.requireNonNull(ad);
+        if (ad.getQuantity() > 1) {
+            qty = controller.inputInt(
+              "How many of these are you planning to buy ?",
+              (n) -> 0 <= n, "Can't buy negative amount."
+            );
+        }
+
+        try {
+            if (!shopPlatform.buyProduct(sessionUser, ad, qty)) {
+                System.out.println("There are not enough of this product for the moment; You will be notified when " +
+                                     "it becomes available again. \n (" + ad.getWaitingList().size() + " users waiting)");
+            }
+            else if (qty > 1) {
+                System.out.println("Successfully bought (" + qty + ") " + ad.getProduct().getName() + " from " + ad.getSellerPseudo());
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws MalformedURLException, NotBoundException, RemoteException {
@@ -102,7 +139,12 @@ public class IfShareClientRMI {
 
         IOnlineShop shop = (IOnlineShop) Naming.lookup("onlineshop");
         IUserDatabase users = (IUserDatabase) Naming.lookup("userdata");
+
         IfShareClientRMI client = new IfShareClientRMI(shop, users, controller);
+
+        client.sessionUser = users.getRandomUser();
+
+        client.doShopping();
         client.displayMainMenu();
     }
 }

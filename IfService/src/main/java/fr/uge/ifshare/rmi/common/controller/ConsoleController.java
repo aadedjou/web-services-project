@@ -1,7 +1,9 @@
 package fr.uge.ifshare.rmi.common.controller;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 public class ConsoleController {
     private final static Scanner sc = new Scanner(System.in);
@@ -27,6 +29,21 @@ public class ConsoleController {
                               "(" + choice.getHint().toLowerCase() + ") > " + choice.getLabel());
     }
 
+    public <T> T displayMenu(String message, List<T> list) {
+        System.out.println("\n\n" + bold(message) + "\n");
+        IntStream.range(0, list.size()).forEach(n -> System.out.println("     " + n + " > " + list.get(n)));
+        T selectedChoice = null;
+
+        do {
+            System.out.print("> ");
+            int selection = sc.nextInt();
+
+            if (0 <= selection && selection < list.size()) selectedChoice = list.get(selection);
+        } while (selectedChoice == null);
+
+        return selectedChoice;
+    }
+
     public void displayMenu(String message, Choice... choices) {
         ChoiceSet choiceSet = ChoiceSet.of(choices);
         Choice selectedChoice = null;
@@ -49,6 +66,20 @@ public class ConsoleController {
 
         System.out.println();
         selectedChoice.processAction();
+    }
+
+    public int inputInt(String message, Predicate<Integer> condition, String errorMessage) {
+        System.out.println("\n   " + message);
+
+        System.out.print("> ");
+        int input = sc.nextInt();
+
+        while (!condition.test(input)) {
+            if (!condition.test(input)) System.out.println(errorMessage(errorMessage));
+            System.out.print("> ");
+            input = sc.nextInt();
+        }
+        return input;
     }
 
     public String inputString(String message) {

@@ -5,5 +5,4 @@ public interface IUser {
     public String getShortenFullName();
     public String getPassword();
     public String getPseudo();
-	
 }
