@@ -22,8 +22,12 @@ public class Demo {
         Set<String> productSet = new HashSet<>(Arrays.asList("chair", "table", "plate", "spoon", "car"));
         for (String name : productSet) {
             try {
-                shop.createAdvertising(users.getRandomUser(), new Product(name, State.NEW), new Random().nextInt(20), 20,
-                  "An excellent " + name + ".");
+                shop.createAdvertising(
+                  users.getRandomUser(),
+                  new Product(name, State.randomState()), new Random().nextInt(20),
+                  200,
+                  "An excellent " + name + "."
+                );
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
