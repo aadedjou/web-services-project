@@ -6,35 +6,29 @@ import fr.uge.ifshare.rmi.common.user.IUser;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Advertising implements Serializable, IAdvertising {
-    //private final Category category;
     private static class Lock implements Serializable {
     }
 
     private final Product product;
-    private final Date date; // transformer en vrai objet date
     private final String sellerPseudo;
-    private int quantity;
-    private float price;
-    private final List<Rating> ratings = new ArrayList<>();
     private final String desc;
-    private ArrayList<AdvertisingObserver> observers = new ArrayList<>();
+    private final Date date;
+    private final double price;
+    private int quantity;
+    private final HashMap<IUser, Rating> ratings = new HashMap<>();
+    private final ArrayList<AdvertisingObserver> observers = new ArrayList<>();
+    private final LinkedHashMap<IUser, Integer> waitingList = new LinkedHashMap<>();
     private final Lock lock = new Lock();
-    private AdvertisingNotifier advNotifier;
 
-    public Advertising(Product product, String sellerPseudo, int quantity, float price, String desc) {
+    public Advertising(Product product, String sellerPseudo, int quantity, double price, String desc) {
         if (quantity < 0) {
-            throw new IllegalStateException("You can't put a negative quantity");
+            throw new IllegalArgumentException("You can't put a negative quantity (" + quantity + ")");
         }
         if (price < 0) {
-            throw new IllegalStateException("You can't put a negative price");
+            throw new IllegalArgumentException("You can't put a negative price (" + price + ")");
         }
         this.date = new Date(System.currentTimeMillis());
         this.product = Objects.requireNonNull(product);
@@ -42,57 +36,62 @@ public class Advertising implements Serializable, IAdvertising {
         this.desc = Objects.requireNonNull(desc);
         this.price = price;
         this.quantity = quantity;
-        // this.category = category;
-        this.advNotifier = new AdvertisingNotifier();
-    }
-    
-    
-    private class AdvertisingNotifier {
-    	LinkedHashMap<IUser, Integer> registeredUsers = new LinkedHashMap<>();
-    	
-    	public void addUserToNotify(IUser user, int quantity) {
-    		registeredUsers.merge(user, quantity, Integer::sum);
-    	}
-    	
-    	public void sendMessageToFirstUser() {
-    		registeredUsers.keySet().iterator().next().receiveMessage("The product " + product.getName() + " is available !");
-    	}
+        register(new WaitingListNotifier(this));
     }
 
-    public ArrayList<AdvertisingObserver> getObservers() {
-        return observers;
+    private class WaitingListNotifier implements AdvertisingObserver {
+        private final Advertising advertising;
+
+        private WaitingListNotifier(Advertising ad) {
+            this.advertising = ad;
+        }
+
+        private void notifyFirstUser() {
+            waitingList.keySet().stream()
+              .findFirst()
+              .ifPresent(u -> u.receiveMessage(
+                "The product '" + product.getName() + "' by " + sellerPseudo + " is now available !")
+              );
+        }
+
+        @Override
+        public void onAdvertisingUpdate() {
+            waitingList.values().stream().findFirst().ifPresent(qty -> {
+                if (qty < advertising.getQuantity()) {
+                    notifyFirstUser();
+                }
+            });
+        }
     }
-
-
 
     @Override
     public String toString() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        return "[" + formatter.format(date) + "] " + sellerPseudo + new String(new char[20 - sellerPseudo.length()]).replace("\0", " ") +
-                 product +  new String(new char[20 - product.toString().length()]).replace("\0", " ") +
-                 "~  " + price + "€ " +
+        return averageRating().toString() + " [" + formatter.format(date) + "] " + sellerPseudo + new String(new char[20 - sellerPseudo.length()]).replace("\0", " ") +
+                 product + new String(new char[35 - product.toString().length()]).replace("\0", " ") +
+                 " ~  " + price + "€ " +
                  "(quantity : " + quantity + ")     " +
                  "  :  '" + desc + "'";
     }
 
-
     @Override
     public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Advertising other = (Advertising) obj;
         return product.equals(other.product) && sellerPseudo.equals(other.sellerPseudo)
                  && this.price == other.price && this.desc.equals(other.desc);
     }
 
+    public Rating averageRating() {
+        return new Rating(ratings.values());
+    }
 
     public Product getProduct() {
         return product;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -104,34 +103,61 @@ public class Advertising implements Serializable, IAdvertising {
         return quantity;
     }
 
-    public void updateAdQuantity(int quantity) {
+    public void performTransaction() {
+        // si la liste d'attente n'est pas vide
+        firstOrderInWaitingList().ifPresent(order -> {
+            // on met à jour la quantité
+            addQuantity(-order.getValue());
+            // on retire le premier client de la liste
+            desistFirstUserFromWaitingList();
+        });
+    }
+
+    public void updateQuantity(int addedQuantity) {
         synchronized (lock) {
-            if (this.quantity == 0 && quantity > 0) {
-                this.advNotifier.sendMessageToFirstUser();
-            }
-            this.quantity += quantity;
+            this.quantity = addedQuantity;
+            this.observers.forEach(AdvertisingObserver::onAdvertisingUpdate);
         }
+    }
+    public void addQuantity(int addedQuantity) {
+        updateQuantity(quantity + addedQuantity);
+    }
+
+    @Override
+    public Optional<Map.Entry<IUser, Integer>> firstOrderInWaitingList() {
+        return waitingList.entrySet().stream().findFirst();
     }
 
     public boolean hasSufficientQuantity(int quantity) {
         return this.quantity - quantity >= 0;
     }
 
-    
     public void register(AdvertisingObserver obs) {
         this.observers.add(obs);
     }
 
     public void unregister(AdvertisingObserver obs) {
-    	if (this.observers.contains(obs)) {
-    		throw new IllegalArgumentException("Unknown observer");
-    	}
-        this.observers.add(obs);
-    }
-    
-    
-    public void addUserToNotify(IUser user, int quantity) {
-    	this.advNotifier.addUserToNotify(user, quantity);
+        this.observers.remove(obs);
     }
 
+    public void addUserToWaitingList(IUser user, int quantity) {
+        waitingList.merge(user, quantity, Integer::sum);
+    }
+
+    @Override
+    public void addRating(IUser user, double grade) {
+        synchronized (lock) {
+            ratings.put(user, new Rating(grade));
+        }
+    }
+
+    @Override
+    public void desistFirstUserFromWaitingList() {
+        // s'il y a un premier
+        firstOrderInWaitingList().ifPresent(order -> {
+            // on l'enlève
+            waitingList.remove(order.getKey());
+        });
+        // si on peut envoyer une notification au nouveau premier, le faire ici
+    }
 }
