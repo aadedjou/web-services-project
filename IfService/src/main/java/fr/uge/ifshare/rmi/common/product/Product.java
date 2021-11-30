@@ -1,16 +1,15 @@
 package fr.uge.ifshare.rmi.common.product;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Product {
+public class Product implements Serializable {
 	private final State state;
 	private final String name;
 	
 	public Product(String name, State state) {
-		Objects.requireNonNull(name);
-		Objects.requireNonNull(state);
-		this.state = state;
-		this.name = name;
+		this.name = Objects.requireNonNull(name);
+		this.state = Objects.requireNonNull(state);
 	}
 
 	@Override
@@ -22,11 +21,14 @@ public class Product {
 		Product other = (Product) obj;
 		return  name.equals(other.name) && state == other.state;
 	}
-	
-	
+
+	public String getName() {
+		return name;
+	}
+
 	@Override
 	public String toString() {
-		return "Product : " + name+ " - State : " + state;
+		return  name + " (" + state + ")";
 	}
 	
 }

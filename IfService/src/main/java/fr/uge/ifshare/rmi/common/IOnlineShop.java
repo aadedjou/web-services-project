@@ -1,26 +1,20 @@
 package fr.uge.ifshare.rmi.common;
 
 import fr.uge.ifshare.rmi.common.product.Product;
+import fr.uge.ifshare.rmi.common.user.IUser;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
 public interface IOnlineShop extends Remote {
+	void createAdvertising(IUser user, Product product, int quantity, double price, String desc) throws RemoteException;
 
-	/*
-    void sellProduct(User user, Product product) throws RemoteException; // date !!
-	 */
-	
-	void createAdvertising(IUser user, Product product, int quantity, float price, String desc) throws RemoteException;
-	
+    boolean buyProduct(IUser user, IAdvertising ad, int quantity) throws RemoteException;
 
-    //void createAd(IUser user, Product product) throws RemoteException; // date !!
+    List<Advertising> getAdvertisings() throws RemoteException;
 
-    IUser registerUser(String firstName, String lastName, String password) throws RemoteException;
+    void addRating(IAdvertising ad, IUser sessionUser, double grade) throws RemoteException;
 
-
-    IUser getUserById(String pseudo) throws RemoteException;
-    
-    void buyProduct(User user, Product product) throws RemoteException;
+    void removeAd(IAdvertising ad) throws RemoteException;
 }

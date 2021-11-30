@@ -42,14 +42,10 @@ public class Choice {
     }
 
     public ArrayList<String> acceptedMatches() {
-    	ArrayList<String> res = new ArrayList<>();
-        res.add(label);
-        res.add(label.toLowerCase());
-        res.add(label.toUpperCase(Locale.ROOT));
-        res.add(getHint());
-        res.add(getHint().toLowerCase());
-        res.add(getHint().toUpperCase(Locale.ROOT));
-        return res;
+        return new ArrayList<>(Arrays.asList(
+          label, label.toLowerCase(), label.toUpperCase(),
+          getHint(), getHint().toLowerCase(), getHint().toUpperCase()
+        ));
     }
 
     public void processAction() {
@@ -61,20 +57,20 @@ class ChoiceSet implements Iterable<Choice> {
     private final LinkedHashSet<Choice> choices;
 
     private ChoiceSet(Choice... choices) {
-    	this.choices = new LinkedHashSet<>();
+        this.choices = new LinkedHashSet<>();
         this.choices.addAll(Arrays.asList(choices));
         this.choices.forEach(Objects::requireNonNull);
         ensureNoDuplicateHints();
     }
 
-    public static ChoiceSet of(Choice ... choices) {
+    public static ChoiceSet of(Choice... choices) {
         return new ChoiceSet(choices);
     }
 
     boolean hasDuplicateHints() {
         Set<String> hintSet = choices.stream()
-                 .map(Choice::getHint)
-                 .collect(Collectors.toSet());
+          .map(Choice::getHint)
+          .collect(Collectors.toSet());
         return choices.size() > hintSet.size();
     }
 

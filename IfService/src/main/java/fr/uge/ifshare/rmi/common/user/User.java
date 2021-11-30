@@ -1,20 +1,19 @@
-package fr.uge.ifshare.rmi.common;
+package fr.uge.ifshare.rmi.common.user;
 
-import fr.uge.ifshare.rmi.common.product.Product;
+import fr.uge.ifshare.rmi.common.IAdvertising;
 
-import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
+public class User implements IUser {
 
-public class User implements Serializable, IUser {
     private final String firstName;
     private final String lastName;
     private final String password;
     private final String pseudo;
+    private final List<IAdvertising> history = new ArrayList<IAdvertising>();
 
     public User(String first, String last, String password) {
         Objects.requireNonNull(first);
@@ -27,52 +26,46 @@ public class User implements Serializable, IUser {
                           .replaceAll("\\p{M}", "")
                           .replace(" ", "");
     }
+    
 
+    @Override
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
+    @Override
     public String getShortenFullName() {
         return firstName + " " + lastName.charAt(0) + ".";
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
 
+    @Override
     public String getPseudo() {
         return pseudo;
     }
 
-    /*
-    public List<Product> getProducts() {
-        return products;
-    }
-    
-	public boolean hasProduct(Product p) {
-		return this.products.contains(p);
-	}*/
-
-    /*
-	public Optional<Product> getProduct(Product p) {
-		if (hasProduct(p)) {
-			int index = products.indexOf(p);
-			return Optional.of(products.get(index));
-		}
-		return Optional.empty();
-		
-	}
-	
-	public boolean addProduct(Product p) {
-		if (hasProduct(p))
-			return false;
-		products.add(p);
-		return true;
-	}
-	*/
     @Override
     public String toString() {
         return getPseudo();
     }
 
+	@Override
+	public void receiveMessage(String string) {
+		System.out.println(string);
+	}
+
+
+    @Override
+    public void addToHistory(IAdvertising ad) {
+        history.add(ad);
+    }
+
+    @Override
+    public List<IAdvertising> getHistory() {
+        return history;
+    }
 }
