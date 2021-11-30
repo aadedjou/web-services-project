@@ -1,21 +1,19 @@
 package fr.uge.ifshare.rmi.common.user;
 
-import java.io.Serializable;
+import fr.uge.ifshare.rmi.common.IAdvertising;
+
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import fr.uge.ifshare.rmi.common.AdvertisingObserver;
-import fr.uge.ifshare.rmi.common.IAdvertising;
-import fr.uge.ifshare.rmi.common.user.User.UserObserver;
-
-public class User implements Serializable, IUser {
+public class User implements IUser {
     private final String firstName;
     private final String lastName;
     private final String password;
     private final String pseudo;
-    private final UserObserver userobserver;
-    
+    private final List<IAdvertising> history = new ArrayList<IAdvertising>();
+
     public User(String first, String last, String password) {
         Objects.requireNonNull(first);
         Objects.requireNonNull(last);
@@ -26,7 +24,6 @@ public class User implements Serializable, IUser {
                         Normalizer.normalize(last, Normalizer.Form.NFD).toLowerCase()
                           .replaceAll("\\p{M}", "")
                           .replace(" ", "");
-        this.userobserver = new UserObserver();
     }
     
     /*
@@ -51,16 +48,6 @@ public class User implements Serializable, IUser {
     	}
     }
     */
-    
-    public class UserObserver implements AdvertisingObserver {
-    	
-    	@Override
-    	public void onAdvertisingUpdate(IAdvertising adv) {
-    		System.out.println("The product from  " + adv + " is now available !");
-    	}
-    	
-        
-    }
 
     @Override
     public String getFullName() {
@@ -92,6 +79,16 @@ public class User implements Serializable, IUser {
 		System.out.println(string);
 	}
 
+    @Override
+    public void addToHistory(IAdvertising ad) {
+        history.add(ad);
+    }
+
+    @Override
+    public List<IAdvertising> getHistory() {
+        return history;
+    }
+
     /*
 	@Override
 	public UserObservers getUserObservers() {
@@ -99,8 +96,4 @@ public class User implements Serializable, IUser {
 	}
 
 	*/
-	
-    
-    
-
 }
