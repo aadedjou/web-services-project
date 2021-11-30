@@ -1,0 +1,37 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from BankService WSDL service -->
+
+  <service name="Bank" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://Bank"/>
+      <parameter name="wsdlServiceElement" value="BankService"/>
+      <parameter name="schemaQualified" value="http://Bank"/>
+      <parameter name="wsdlServicePort" value="Bank"/>
+      <parameter name="className" value="Bank_pkg.BankSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="Bank"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="getClientAccountInformation" qname="operNS:getClientAccountInformation" xmlns:operNS="http://Bank" returnQName="retNS:getClientAccountInformationReturn" xmlns:retNS="http://Bank" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:clientName" xmlns:pns="http://Bank" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="debit" qname="operNS:debit" xmlns:operNS="http://Bank" soapAction="" >
+        <parameter qname="pns:clientName" xmlns:pns="http://Bank" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:amount" xmlns:pns="http://Bank" type="tns:float" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="clientCanBuy" qname="operNS:clientCanBuy" xmlns:operNS="http://Bank" returnQName="retNS:clientCanBuyReturn" xmlns:retNS="http://Bank" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:clientName" xmlns:pns="http://Bank" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:amount" xmlns:pns="http://Bank" type="tns:float" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <parameter name="allowedMethods" value="clientCanBuy getClientAccountInformation debit"/>
+
+  </service>
+</deployment>
