@@ -47,6 +47,7 @@ public class IfShareClientRMI {
         System.exit(0);
     }
 
+    
     private List<IAdvertising> notificationList() {
         List<IAdvertising> list = null;
         try {
@@ -60,6 +61,7 @@ public class IfShareClientRMI {
         }
         return list;
     }
+    
 
     // menus
     private void displayLoginMenu() {
@@ -125,7 +127,9 @@ public class IfShareClientRMI {
         try {
             // TODO: add balance bank
             IAdvertising ad = controller.displayMenu(
-              "Which of these products are you looking for ?   -   Your balance: ", shop.getAdvertisings());
+              "Which of these products are you looking for ?   -   Your balance: ", shop.getAdvertisings().stream()
+              																							  .filter(adv -> !adv.getSellerPseudo().equals(sessionUser.getPseudo()))
+              																							  .collect(Collectors.toList()));
             int qty = 1;
 
             if (ad == null) return;
