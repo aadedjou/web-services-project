@@ -17,6 +17,11 @@ class ColoredConsoleController extends ConsoleController {
     }
 
     @Override
+    void printChoice(int index, Object obj) {
+        System.out.println("     " + (index < 10 ? " " : "") + HINT_COLOR + index + DEFAULT_COLOR + " > " + obj);
+    }
+
+    @Override
     void printChoice(Choice choice) {
         System.out.println(("     > " + HINT_COLOR + choice.getHint() + DEFAULT_COLOR + choice.getLabelWithoutHint()));
     }
