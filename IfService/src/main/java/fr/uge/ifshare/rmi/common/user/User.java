@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class User implements IUser {
+
     private final String firstName;
     private final String lastName;
     private final String password;
@@ -26,28 +27,6 @@ public class User implements IUser {
                           .replace(" ", "");
     }
     
-    /*
-    public class UserObservers {
-    	private final ArrayList<UserObserver> userobservers = new ArrayList<UserObserver>();
-    	
-    	
-    	public UserObserver createUserObserver() {
-    		return new UserObserver();
-    	}
-    	
-    	public void addNewUserObserver() {
-    		userobservers.add(new UserObserver());
-    	}
-    	
-    	
-    	public void removeUserObserver(UserObserver userobs) {
-    		if (!userobservers.contains(userobs)) {
-    			throw new IllegalArgumentException("User Observer is wrong");
-    		}
-    		userobservers.remove(Objects.requireNonNull(userobs));
-    	}
-    }
-    */
 
     @Override
     public String getFullName() {
@@ -79,6 +58,7 @@ public class User implements IUser {
 		System.out.println(string);
 	}
 
+
     @Override
     public void addToHistory(IAdvertising ad) {
         history.add(ad);
@@ -88,12 +68,4 @@ public class User implements IUser {
     public List<IAdvertising> getHistory() {
         return history;
     }
-
-    /*
-	@Override
-	public UserObservers getUserObservers() {
-		return userobservers;
-	}
-
-	*/
 }

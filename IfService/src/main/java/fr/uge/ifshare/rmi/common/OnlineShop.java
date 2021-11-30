@@ -83,3 +83,4 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
         return true;
     }
 }
+
