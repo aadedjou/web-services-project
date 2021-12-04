@@ -29,10 +29,17 @@ public class UserDatabase extends UnicastRemoteObject implements IUserDatabase {
 
     @Override
     public IUser getUserById(String pseudo) {
-        return users.stream()
-          .filter(u -> u.getPseudo()
-            .equals(Objects.requireNonNull(pseudo))).findFirst()
-          .orElse(null);
+    	return users.stream()
+    	          .filter(u -> {
+    	              try {
+    	                  return u.getPseudo().equals(Objects.requireNonNull(pseudo));
+    	              } catch (RemoteException e) {
+    	                  e.printStackTrace();
+    	              }
+    	              return false;
+    	          })
+    	          .findFirst()
+    	          .orElse(null);
     }
 
     @Override
