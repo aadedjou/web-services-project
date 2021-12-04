@@ -11,13 +11,13 @@ public class UserDatabase extends UnicastRemoteObject implements IUserDatabase {
     private final List<IUser> users = new ArrayList<>();
 
     public UserDatabase() throws RemoteException {
-		registerUser("Sami", "Ben Chakal", "dev");
-		registerUser("Sebastien", "Petanque", "dev");
-        registerUser("Killian", "Blancheur", "user");
-        registerUser("Melissa", "Ammoche", "user");
-        registerUser("Myriam", "Poussin", "user");
-        registerUser("Yohan", "Chameau", "user");
-        registerUser("Ruben", "Charo", "user");
+		registerUser("Sami", "Ben Lakhal", "dev");
+		registerUser("Sebastien", "Postansque", "dev");
+        registerUser("Killian", "Blanchard", "user");
+        registerUser("Melissa", "Ammiche", "user");
+        registerUser("Myriam", "Pouchain", "user");
+        registerUser("Yohan", "Rameau", "user");
+        registerUser("Ruben", "Sero", "user");
     }
 
     @Override

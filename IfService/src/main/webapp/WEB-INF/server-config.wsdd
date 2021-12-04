@@ -33,13 +33,22 @@
   <ns1:parameter name="className" value="org.apache.axis.Version"/>
  </ns1:service>
  <ns1:service name="IfService" provider="java:RPC" style="wrapped" use="literal">
-  <ns2:operation name="getSoldProductsList" qname="ns1:getSoldProductsList" returnQName="ns1:getSoldProductsListReturn" returnType="xsd:string" soapAction="" xmlns:ns1="http://ifservice.uge.fr" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xml.apache.org/axis/wsdd/"/>
+  <ns2:operation name="createUser" qname="ns1:createUser" returnQName="ns1:createUserReturn" returnType="xsd:string" soapAction="" xmlns:ns1="http://ifservice.uge.fr" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xml.apache.org/axis/wsdd/">
+   <ns2:parameter qname="ns1:firstName" type="xsd:string"/>
+   <ns2:parameter qname="ns1:lastName" type="xsd:string"/>
+   <ns2:parameter qname="ns1:password" type="xsd:string"/>
+   <ns2:parameter qname="ns1:cash" type="xsd:double"/>
+  </ns2:operation>
   <ns1:operation name="buyProduct" qname="ns2:buyProduct" returnQName="ns2:buyProductReturn" returnType="xsd:string" soapAction="" xmlns:ns2="http://ifservice.uge.fr" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
    <ns1:parameter qname="ns2:productName" type="xsd:string"/>
    <ns1:parameter qname="ns2:sellerName" type="xsd:string"/>
    <ns1:parameter qname="ns2:clientName" type="xsd:string"/>
   </ns1:operation>
-  <ns1:parameter name="allowedMethods" value="getSoldProductsList buyProduct"/>
+  <ns1:operation name="getBankAccountInformation" qname="ns3:getBankAccountInformation" returnQName="ns3:getBankAccountInformationReturn" returnType="xsd:string" soapAction="" xmlns:ns3="http://ifservice.uge.fr" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ns1:parameter qname="ns3:pseudo" type="xsd:string"/>
+  </ns1:operation>
+  <ns1:operation name="getSoldProductsList" qname="ns4:getSoldProductsList" returnQName="ns4:getSoldProductsListReturn" returnType="xsd:string" soapAction="" xmlns:ns4="http://ifservice.uge.fr" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  <ns1:parameter name="allowedMethods" value="buyProduct getSoldProductsList getBankAccountInformation createUser"/>
   <ns1:parameter name="typeMappingVersion" value="1.2"/>
   <ns1:parameter name="wsdlPortType" value="IfService"/>
   <ns1:parameter name="className" value="fr.uge.ifservice.IfService"/>

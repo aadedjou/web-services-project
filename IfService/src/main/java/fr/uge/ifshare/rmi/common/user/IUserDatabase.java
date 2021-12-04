@@ -13,4 +13,5 @@ public interface IUserDatabase extends Remote {
     List<IUser> userList() throws RemoteException;
 
     IUser getRandomUser() throws RemoteException;
+    
 }

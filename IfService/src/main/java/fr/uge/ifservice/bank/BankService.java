@@ -10,7 +10,7 @@ package fr.uge.ifservice.bank;
 public interface BankService extends javax.xml.rpc.Service {
     public java.lang.String getBankAddress();
 
-    public Bank getBank() throws javax.xml.rpc.ServiceException;
+    public fr.uge.ifservice.bank.Bank getBank() throws javax.xml.rpc.ServiceException;
 
-    public Bank getBank(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
+    public fr.uge.ifservice.bank.Bank getBank(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
 }

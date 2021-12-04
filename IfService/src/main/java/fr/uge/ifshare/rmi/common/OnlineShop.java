@@ -6,8 +6,10 @@ import fr.uge.ifshare.rmi.common.user.IUser;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
     private final List<Advertising> advertisings = new ArrayList<>();
@@ -89,14 +91,11 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
     
 	@Override
 	public IAdvertising[] getAdvertisingsWhereProductWasBought() {
-		IAdvertising[] adsToObjects = new IAdvertising[advertisings.size()];
-		for (int i = 0; i < advertisings.size(); i++) {
-			if (advertisings.get(i).getProductWasBought()) {
-				adsToObjects[i] = advertisings.get(i);
-			}
-		}
-
-		return adsToObjects;
+		List<IAdvertising> adsToObjects = advertisings.stream()
+										.filter(ad -> ad.getProductWasBought())
+										.collect(Collectors.toList());
+		
+		return adsToObjects.toArray(new IAdvertising[adsToObjects.size()]);	
 	}
 
 	@Override

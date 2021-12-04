@@ -10,14 +10,23 @@
       <parameter name="className" value="fr.uge.ifservice.IfService"/>
       <parameter name="wsdlPortType" value="IfService"/>
       <parameter name="typeMappingVersion" value="1.2"/>
-      <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getSoldProductsList" qname="operNS:getSoldProductsList" returnQName="retNS:getSoldProductsListReturn" returnType="rtns:string" soapAction="">
+      <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="createUser" qname="operNS:createUser" returnQName="retNS:createUserReturn" returnType="rtns:string" soapAction="">
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:firstName" type="tns:string"/>
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:lastName" type="tns:string"/>
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:password" type="tns:string"/>
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:cash" type="tns:double"/>
       </operation>
       <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="buyProduct" qname="operNS:buyProduct" returnQName="retNS:buyProductReturn" returnType="rtns:string" soapAction="">
         <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:productName" type="tns:string"/>
         <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:sellerName" type="tns:string"/>
         <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:clientName" type="tns:string"/>
       </operation>
-      <parameter name="allowedMethods" value="getSoldProductsList buyProduct"/>
+      <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getBankAccountInformation" qname="operNS:getBankAccountInformation" returnQName="retNS:getBankAccountInformationReturn" returnType="rtns:string" soapAction="">
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:pseudo" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getSoldProductsList" qname="operNS:getSoldProductsList" returnQName="retNS:getSoldProductsListReturn" returnType="rtns:string" soapAction="">
+      </operation>
+      <parameter name="allowedMethods" value="buyProduct getSoldProductsList getBankAccountInformation createUser"/>
 
   </service>
 </deployment>

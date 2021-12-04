@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap");
+
+html,
+body, button {
+    font-family: "Gotham", sans-serif;
+}
+
+button {
+    margin: 25px 0;
+    font-family: "Gotham", sans-serif;
+}
+
+.border {
+    border: red solid 2px;
+}
+
+.line {
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-y {
+    display: flex;
+    flex-direction: column;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-y {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.input-box {
+    font-family: "Raleway", serif;
+    margin: 20px;
+    width: 80%;
+    display: inline-block;
+}
+
+.input-box input {
+    width: 150px;
+}
+
+.form-box {
+    width: 225px;
+}
+

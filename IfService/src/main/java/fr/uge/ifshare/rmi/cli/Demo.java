@@ -25,7 +25,7 @@ public class Demo {
                 shop.createAdvertising(
                   users.getRandomUser(),
                   new Product(name, State.randomState()), new Random().nextInt(20),
-                  200,
+                  20,
                   "An excellent " + name + "."
                 );
             } catch (RemoteException e) {

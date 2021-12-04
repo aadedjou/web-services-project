@@ -8,8 +8,9 @@
 package fr.uge.ifservice.bank;
 
 public interface Bank extends java.rmi.Remote {
+    public java.lang.String createAccount(java.lang.String pseudo, double cash) throws java.rmi.RemoteException;
     public void credit(java.lang.String clientName, double amount) throws java.rmi.RemoteException;
-    public void debit(java.lang.String clientName, double amount) throws java.rmi.RemoteException;
     public boolean clientCanBuy(java.lang.String clientName, double amount) throws java.rmi.RemoteException;
+    public void debit(java.lang.String clientName, double amount) throws java.rmi.RemoteException;
     public java.lang.String getClientAccountInformation(java.lang.String clientName) throws java.rmi.RemoteException;
 }

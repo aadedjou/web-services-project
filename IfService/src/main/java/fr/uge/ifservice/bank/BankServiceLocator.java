@@ -7,7 +7,7 @@
 
 package fr.uge.ifservice.bank;
 
-public class BankServiceLocator extends org.apache.axis.client.Service implements BankService {
+public class BankServiceLocator extends org.apache.axis.client.Service implements fr.uge.ifservice.bank.BankService {
 
     public BankServiceLocator() {
     }
@@ -39,7 +39,7 @@ public class BankServiceLocator extends org.apache.axis.client.Service implement
         BankWSDDServiceName = name;
     }
 
-    public Bank getBank() throws javax.xml.rpc.ServiceException {
+    public fr.uge.ifservice.bank.Bank getBank() throws javax.xml.rpc.ServiceException {
        java.net.URL endpoint;
         try {
             endpoint = new java.net.URL(Bank_address);
@@ -50,9 +50,9 @@ public class BankServiceLocator extends org.apache.axis.client.Service implement
         return getBank(endpoint);
     }
 
-    public Bank getBank(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
+    public fr.uge.ifservice.bank.Bank getBank(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
         try {
-            BankSoapBindingStub _stub = new BankSoapBindingStub(portAddress, this);
+            fr.uge.ifservice.bank.BankSoapBindingStub _stub = new fr.uge.ifservice.bank.BankSoapBindingStub(portAddress, this);
             _stub.setPortName(getBankWSDDServiceName());
             return _stub;
         }
@@ -72,8 +72,8 @@ public class BankServiceLocator extends org.apache.axis.client.Service implement
      */
     public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
         try {
-            if (Bank.class.isAssignableFrom(serviceEndpointInterface)) {
-                BankSoapBindingStub _stub = new BankSoapBindingStub(new java.net.URL(Bank_address), this);
+            if (fr.uge.ifservice.bank.Bank.class.isAssignableFrom(serviceEndpointInterface)) {
+                fr.uge.ifservice.bank.BankSoapBindingStub _stub = new fr.uge.ifservice.bank.BankSoapBindingStub(new java.net.URL(Bank_address), this);
                 _stub.setPortName(getBankWSDDServiceName());
                 return _stub;
             }

@@ -4,13 +4,20 @@
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://ifservice.uge.fr" xmlns="http://www.w3.org/2001/XMLSchema">
-   <element name="getSoldProductsList">
-    <complexType/>
-   </element>
-   <element name="getSoldProductsListResponse">
+   <element name="createUser">
     <complexType>
      <sequence>
-      <element maxOccurs="unbounded" name="getSoldProductsListReturn" type="xsd:string"/>
+      <element name="firstName" type="xsd:string"/>
+      <element name="lastName" type="xsd:string"/>
+      <element name="password" type="xsd:string"/>
+      <element name="cash" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="createUserResponse">
+    <complexType>
+     <sequence>
+      <element name="createUserReturn" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>
@@ -30,8 +37,40 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      </sequence>
     </complexType>
    </element>
+   <element name="getBankAccountInformation">
+    <complexType>
+     <sequence>
+      <element name="pseudo" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getBankAccountInformationResponse">
+    <complexType>
+     <sequence>
+      <element name="getBankAccountInformationReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getSoldProductsList">
+    <complexType/>
+   </element>
+   <element name="getSoldProductsListResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getSoldProductsListReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
   </schema>
  </wsdl:types>
+
+   <wsdl:message name="getBankAccountInformationResponse">
+
+      <wsdl:part element="impl:getBankAccountInformationResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
 
    <wsdl:message name="getSoldProductsListResponse">
 
@@ -49,9 +88,33 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    </wsdl:message>
 
+   <wsdl:message name="getBankAccountInformationRequest">
+
+      <wsdl:part element="impl:getBankAccountInformation" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="createUserRequest">
+
+      <wsdl:part element="impl:createUser" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
    <wsdl:message name="getSoldProductsListRequest">
 
       <wsdl:part element="impl:getSoldProductsList" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="createUserResponse">
+
+      <wsdl:part element="impl:createUserResponse" name="parameters">
 
       </wsdl:part>
 
@@ -67,13 +130,13 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    <wsdl:portType name="IfService">
 
-      <wsdl:operation name="getSoldProductsList">
+      <wsdl:operation name="createUser">
 
-         <wsdl:input message="impl:getSoldProductsListRequest" name="getSoldProductsListRequest">
+         <wsdl:input message="impl:createUserRequest" name="createUserRequest">
 
        </wsdl:input>
 
-         <wsdl:output message="impl:getSoldProductsListResponse" name="getSoldProductsListResponse">
+         <wsdl:output message="impl:createUserResponse" name="createUserResponse">
 
        </wsdl:output>
 
@@ -91,23 +154,47 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
+      <wsdl:operation name="getBankAccountInformation">
+
+         <wsdl:input message="impl:getBankAccountInformationRequest" name="getBankAccountInformationRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getBankAccountInformationResponse" name="getBankAccountInformationResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getSoldProductsList">
+
+         <wsdl:input message="impl:getSoldProductsListRequest" name="getSoldProductsListRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getSoldProductsListResponse" name="getSoldProductsListResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
    </wsdl:portType>
 
    <wsdl:binding name="IfServiceSoapBinding" type="impl:IfService">
 
       <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
-      <wsdl:operation name="getSoldProductsList">
+      <wsdl:operation name="createUser">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="getSoldProductsListRequest">
+         <wsdl:input name="createUserRequest">
 
             <wsdlsoap:body use="literal"/>
 
          </wsdl:input>
 
-         <wsdl:output name="getSoldProductsListResponse">
+         <wsdl:output name="createUserResponse">
 
             <wsdlsoap:body use="literal"/>
 
@@ -126,6 +213,42 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:input>
 
          <wsdl:output name="buyProductResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getBankAccountInformation">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getBankAccountInformationRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getBankAccountInformationResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getSoldProductsList">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getSoldProductsListRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getSoldProductsListResponse">
 
             <wsdlsoap:body use="literal"/>
 
