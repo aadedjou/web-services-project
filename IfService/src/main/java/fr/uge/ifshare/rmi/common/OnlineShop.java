@@ -98,6 +98,13 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 
 		return adsToObjects;
 	}
+
+	@Override
+	public Advertising getAdvertisingByProductNameAndSeller(String productName, String sellerName)
+			throws RemoteException {
+		return advertisings.stream()
+						   .filter(ad -> ad.getProduct().getName().equals(productName) && ad.getSellerPseudo().equals(sellerName)).findFirst().get();
+	}
     
 }
 

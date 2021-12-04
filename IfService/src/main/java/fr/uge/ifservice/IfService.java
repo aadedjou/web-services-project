@@ -14,7 +14,6 @@ import fr.uge.ifservice.converter.Converter;
 import fr.uge.ifservice.converter.ConverterServiceLocator;
 import fr.uge.ifshare.rmi.common.IAdvertising;
 import fr.uge.ifshare.rmi.common.IOnlineShop;
-import fr.uge.ifshare.rmi.common.user.IUser;
 import fr.uge.ifshare.rmi.common.user.IUserDatabase;
 
 public class IfService {
@@ -33,8 +32,13 @@ public class IfService {
 	
 	
 	
-	public Object[] getSoldProductsList()  throws RemoteException{
-		return shop.getAdvertisingsWhereProductWasBought();
+	public String[] getSoldProductsList()  throws RemoteException{
+		IAdvertising[] ads = shop.getAdvertisingsWhereProductWasBought();
+		String[] adsToString = new String[ads.length];
+		for (int i = 0; i < ads.length; i++) {
+			adsToString[i] = ads[i].toString();
+		}
+		return adsToString;
 	}
 	
 	
@@ -44,16 +48,17 @@ public class IfService {
 	 * Si oui, il achete le produit, et on fait un débit, + on change l'etat du produit/annonce
 	 * Si non, il peut rien acheter
 	 */
-	public String buyProduct(IAdvertising ad, String clientName) throws RemoteException {
+	public String buyProduct(String productName, String sellerName, String clientName) throws RemoteException {
 		
-		if (bankService.clientCanBuy(clientName, ad.getPrice())) {
+		if (bankService.clientCanBuy(clientName, shop.getAdvertisingByProductNameAndSeller(productName, sellerName).getPrice())) {
+			IAdvertising ad = shop.getAdvertisingByProductNameAndSeller(productName, sellerName);
 			bankService.debit(clientName, ad.getPrice());
 			shop.buyProduct(usersDB.getUserById(clientName), ad, 1);
 			bankService.credit(usersDB.getUserById(ad.getSellerPseudo()).getPseudo(), ad.getPrice());
 		
 			return "You bought a(n) " + ad.getProduct().getName() + " for " + ad.getPrice();
 		}
-		return "You can't buy a(n) " + ad.getProduct().getName() + ". Not enough money.";
+		return "You can't buy this product. Not enough money.";
 	}
 	
 	

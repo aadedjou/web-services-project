@@ -21,4 +21,6 @@ public interface IOnlineShop extends Remote {
     
     // USED BY IFSERVICE
     IAdvertising[] getAdvertisingsWhereProductWasBought() throws RemoteException;
+    
+    Advertising getAdvertisingByProductNameAndSeller(String productName, String sellerName) throws RemoteException;
 }

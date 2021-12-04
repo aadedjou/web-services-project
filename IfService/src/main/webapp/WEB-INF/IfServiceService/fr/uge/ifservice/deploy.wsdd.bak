@@ -20,44 +20,14 @@
       <parameter name="className" value="fr.uge.ifservice.IfServiceSoapBindingImpl"/>
       <parameter name="wsdlPortType" value="IfService"/>
       <parameter name="typeMappingVersion" value="1.2"/>
-      <operation name="getSoldProductsList" qname="operNS:getSoldProductsList" xmlns:operNS="http://ifservice.uge.fr" returnQName="retNS:getSoldProductsListReturn" xmlns:retNS="http://ifservice.uge.fr" returnType="rtns:anyType" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+      <operation name="getSoldProductsList" qname="operNS:getSoldProductsList" xmlns:operNS="http://ifservice.uge.fr" returnQName="retNS:getSoldProductsListReturn" xmlns:retNS="http://ifservice.uge.fr" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
       </operation>
       <operation name="buyProduct" qname="operNS:buyProduct" xmlns:operNS="http://ifservice.uge.fr" returnQName="retNS:buyProductReturn" xmlns:retNS="http://ifservice.uge.fr" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
-        <parameter qname="pns:ad" xmlns:pns="http://ifservice.uge.fr" type="tns:anyType" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
-        <parameter qname="pns:client" xmlns:pns="http://ifservice.uge.fr" type="tns:anyType" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:productName" xmlns:pns="http://ifservice.uge.fr" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sellerName" xmlns:pns="http://ifservice.uge.fr" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:clientName" xmlns:pns="http://ifservice.uge.fr" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
       </operation>
       <parameter name="allowedMethods" value="getSoldProductsList buyProduct"/>
 
-      <arrayMapping
-        xmlns:ns="http://ifservice.uge.fr"
-        qname="ns:>getSoldProductsListResponse"
-        type="java:java.lang.Object[]"
-        innerType="cmp-ns:anyType" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://ifservice.uge.fr"
-        qname="ns:>buyProduct"
-        type="java:fr.uge.ifservice.BuyProduct"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://ifservice.uge.fr"
-        qname="ns:>buyProductResponse"
-        type="java:fr.uge.ifservice.BuyProductResponse"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://ifservice.uge.fr"
-        qname="ns:>getSoldProductsList"
-        type="java:fr.uge.ifservice.GetSoldProductsList"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
   </service>
 </deployment>

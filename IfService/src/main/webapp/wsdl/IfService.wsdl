@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://ifservice.uge.fr" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ifservice.uge.fr" xmlns:intf="http://ifservice.uge.fr" xmlns:tns1="http://common.rmi.ifshare.uge.fr" xmlns:tns2="http://user.common.rmi.ifshare.uge.fr" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://ifservice.uge.fr" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ifservice.uge.fr" xmlns:intf="http://ifservice.uge.fr" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://ifservice.uge.fr" xmlns="http://www.w3.org/2001/XMLSchema">
-   <import namespace="http://user.common.rmi.ifshare.uge.fr"/>
-   <import namespace="http://common.rmi.ifshare.uge.fr"/>
    <element name="getSoldProductsList">
     <complexType/>
    </element>
    <element name="getSoldProductsListResponse">
     <complexType>
      <sequence>
-      <element maxOccurs="unbounded" name="getSoldProductsListReturn" type="xsd:anyType"/>
+      <element maxOccurs="unbounded" name="getSoldProductsListReturn" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>
    <element name="buyProduct">
     <complexType>
      <sequence>
-      <element name="ad" type="xsd:anyType"/>
-      <element name="client" type="xsd:anyType"/>
+      <element name="productName" type="xsd:string"/>
+      <element name="sellerName" type="xsd:string"/>
+      <element name="clientName" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>

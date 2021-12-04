@@ -7,8 +7,8 @@
   <ns1:parameter name="dotNetSoapEncFix" value="true"/>
   <ns1:parameter name="enableNamespacePrefixOptimization" value="false"/>
   <ns1:parameter name="sendXMLDeclaration" value="true"/>
-  <ns1:parameter name="sendXsiTypes" value="true"/>
   <ns1:parameter name="attachments.implementation" value="org.apache.axis.attachments.AttachmentsImpl"/>
+  <ns1:parameter name="sendXsiTypes" value="true"/>
   <ns1:requestFlow>
    <ns1:handler type="java:org.apache.axis.handlers.JWSHandler">
     <ns1:parameter name="scope" value="session"/>
@@ -31,6 +31,22 @@
  <ns1:service name="Version" provider="java:RPC">
   <ns1:parameter name="allowedMethods" value="getVersion"/>
   <ns1:parameter name="className" value="org.apache.axis.Version"/>
+ </ns1:service>
+ <ns1:service name="IfService" provider="java:RPC" style="wrapped" use="literal">
+  <ns2:operation name="getSoldProductsList" qname="ns1:getSoldProductsList" returnQName="ns1:getSoldProductsListReturn" returnType="xsd:string" soapAction="" xmlns:ns1="http://ifservice.uge.fr" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xml.apache.org/axis/wsdd/"/>
+  <ns1:operation name="buyProduct" qname="ns2:buyProduct" returnQName="ns2:buyProductReturn" returnType="xsd:string" soapAction="" xmlns:ns2="http://ifservice.uge.fr" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <ns1:parameter qname="ns2:productName" type="xsd:string"/>
+   <ns1:parameter qname="ns2:sellerName" type="xsd:string"/>
+   <ns1:parameter qname="ns2:clientName" type="xsd:string"/>
+  </ns1:operation>
+  <ns1:parameter name="allowedMethods" value="getSoldProductsList buyProduct"/>
+  <ns1:parameter name="typeMappingVersion" value="1.2"/>
+  <ns1:parameter name="wsdlPortType" value="IfService"/>
+  <ns1:parameter name="className" value="fr.uge.ifservice.IfService"/>
+  <ns1:parameter name="wsdlServicePort" value="IfService"/>
+  <ns1:parameter name="schemaQualified" value="http://ifservice.uge.fr"/>
+  <ns1:parameter name="wsdlTargetNamespace" value="http://ifservice.uge.fr"/>
+  <ns1:parameter name="wsdlServiceElement" value="IfServiceService"/>
  </ns1:service>
  <ns1:transport name="http">
   <ns1:requestFlow>

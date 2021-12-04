@@ -10,17 +10,14 @@
       <parameter name="className" value="fr.uge.ifservice.IfService"/>
       <parameter name="wsdlPortType" value="IfService"/>
       <parameter name="typeMappingVersion" value="1.2"/>
-      <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getSoldProductsList" qname="operNS:getSoldProductsList" returnQName="retNS:getSoldProductsListReturn" returnType="rtns:anyType" soapAction="">
+      <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getSoldProductsList" qname="operNS:getSoldProductsList" returnQName="retNS:getSoldProductsListReturn" returnType="rtns:string" soapAction="">
       </operation>
       <operation xmlns:operNS="http://ifservice.uge.fr" xmlns:retNS="http://ifservice.uge.fr" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="buyProduct" qname="operNS:buyProduct" returnQName="retNS:buyProductReturn" returnType="rtns:string" soapAction="">
-        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:ad" type="tns:anyType"/>
-        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:client" type="tns:anyType"/>
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:productName" type="tns:string"/>
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:sellerName" type="tns:string"/>
+        <parameter xmlns:pns="http://ifservice.uge.fr" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:clientName" type="tns:string"/>
       </operation>
       <parameter name="allowedMethods" value="getSoldProductsList buyProduct"/>
 
-      <arrayMapping xmlns:ns="http://ifservice.uge.fr" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema" qname="ns:&gt;getSoldProductsListResponse" type="java:java.lang.Object[]" innerType="cmp-ns:anyType" encodingStyle=""/>
-      <typeMapping xmlns:ns="http://ifservice.uge.fr" qname="ns:&gt;buyProduct" type="java:fr.uge.ifservice.BuyProduct" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
-      <typeMapping xmlns:ns="http://ifservice.uge.fr" qname="ns:&gt;buyProductResponse" type="java:fr.uge.ifservice.BuyProductResponse" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
-      <typeMapping xmlns:ns="http://ifservice.uge.fr" qname="ns:&gt;getSoldProductsList" type="java:fr.uge.ifservice.GetSoldProductsList" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
   </service>
 </deployment>
