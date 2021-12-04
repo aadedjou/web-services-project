@@ -38,8 +38,13 @@ public class IfShareClientRMI {
     }
 
     private void disconnectUser() {
-        controller.printMessage("(Successfully disconnected from " + sessionUser.getPseudo() + ")");
-        sessionUser = null;
+        try {
+			controller.printMessage("(Successfully disconnected from " + sessionUser.getPseudo() + ")");
+			sessionUser = null;
+	        
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
         displayLoginMenu();
     }
 
@@ -89,10 +94,22 @@ public class IfShareClientRMI {
           "No user with this pseudo was found. Please retry."
         );
 
-        controller.inputString("Enter your password:",
-          (p) -> user[0].getPassword().equals(p),
-          "Wrong password for '" + user[0].getPseudo() + "'"
-        );
+        try {
+			controller.inputString("Enter your password:",
+			  (p) -> {
+				try {
+					return user[0].getPassword().equals(p);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			},
+			  "Wrong password for '" + user[0].getPseudo() + "'"
+			);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         loginAs(user[0]);
     }
 
@@ -109,18 +126,23 @@ public class IfShareClientRMI {
 
     private void displayShopMenu() {
         Objects.requireNonNull(sessionUser);
-        controller.displayMenu(
-          "Welcome back, " + sessionUser.getShortenFullName() + " !\n" +
-            "What can we do for you ?",
-          new Choice("Do some shopping", this::doShopping),
-          new Choice("Sell a product", this::createAd),
-          new Choice("Notifications" + (notificationList().isEmpty() ? "" : " (" + notificationList().size() + ")"),
-            this::checkNotifications),
-          new Choice("Rate my purchases", this::ratePurchases),
-          new Choice("My sales", this::viewSales),
-          new Choice("Disconnect from account", this::disconnectUser),
-          new Choice("Exit", this::exitSession)
-        );
+        try {
+			controller.displayMenu(
+			  "Welcome back, " + sessionUser.getShortenFullName() + " !\n" +
+			    "What can we do for you ?",
+			  new Choice("Do some shopping", this::doShopping),
+			  new Choice("Sell a product", this::createAd),
+			  new Choice("Notifications" + (notificationList().isEmpty() ? "" : " (" + notificationList().size() + ")"),
+			    this::checkNotifications),
+			  new Choice("Rate my purchases", this::ratePurchases),
+			  new Choice("My sales", this::viewSales),
+			  new Choice("Disconnect from account", this::disconnectUser),
+			  new Choice("Exit", this::exitSession)
+			);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     private void doShopping() {
@@ -143,7 +165,14 @@ public class IfShareClientRMI {
                     "Do you wish to be notified when '" + ad.getProduct().getName() + "' becomes available again ?",
                   new Choice("Yes", () -> controller.printMessage(
                     "You will receive a notification when the product will be back in the shop")),
-                  new Choice("No thanks", ad::desistFirstUserFromWaitingList)
+                  new Choice("No thanks", () -> {
+					try {
+						ad.desistFirstUserFromWaitingList();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				})
                 );
             } else if (qty > 0) {
                 controller.printMessage("Successfully bought (" + qty + ") " + ad.getProduct().getName() +
@@ -163,7 +192,7 @@ public class IfShareClientRMI {
             String desc = controller.inputString("Enter a quick description for '" + name + "'.");
             int quantity = controller.inputPositiveInt("How many '" + name + "s' do you want to put up for sale ?");
             double price = controller.inputDouble(
-              "Set a price (â‚¬) for your product. (1 unit)", p -> p > 0, "Value be positive."
+              "Set a price (€) for your product. (1 unit)", p -> p > 0, "Value be positive."
             );
             shop.createAdvertising(sessionUser, new Product(name, state), quantity, price, desc);
         } catch (RemoteException e) {

@@ -22,7 +22,7 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 
 
     @Override
-    public void createAdvertising(IUser user, Product product, int quantity, double price, String desc) {
+    public void createAdvertising(IUser user, Product product, int quantity, double price, String desc) throws RemoteException {
         Advertising ad = new Advertising(product, user.getPseudo(), quantity, price, desc);
         if (adCanBeCreated(ad)) {
             advertisings.add(ad);
@@ -88,15 +88,15 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
     //USED BY IFSERVICE
     
 	@Override
-	public List<IAdvertising> getAdvertisingsWhereProductWasBought() {
-		List<IAdvertising> ads = new ArrayList<IAdvertising>();
-		
-		for (IAdvertising ad : this.advertisings) {
-			if (ad.getProductWasBought()) {
-				ads.add(ad);
+	public IAdvertising[] getAdvertisingsWhereProductWasBought() {
+		IAdvertising[] adsToObjects = new IAdvertising[advertisings.size()];
+		for (int i = 0; i < advertisings.size(); i++) {
+			if (advertisings.get(i).getProductWasBought()) {
+				adsToObjects[i] = advertisings.get(i);
 			}
 		}
-		return ads;
+
+		return adsToObjects;
 	}
     
 }

@@ -5,6 +5,7 @@ import fr.uge.ifshare.rmi.common.product.Rating;
 import fr.uge.ifshare.rmi.common.user.IUser;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -53,8 +54,15 @@ public class Advertising implements Serializable, IAdvertising {
         private void notifyFirstUser() {
             waitingList.keySet().stream()
               .findFirst()
-              .ifPresent(u -> u.receiveMessage(
-                "The product '" + product.getName() + "' by " + sellerPseudo + " is now available !")
+              .ifPresent(u -> {
+				try {
+					u.receiveMessage(
+					    "The product '" + product.getName() + "' by " + sellerPseudo + " is now available !");
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
               );
         }
 

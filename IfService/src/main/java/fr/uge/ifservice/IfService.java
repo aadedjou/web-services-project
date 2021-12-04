@@ -4,32 +4,36 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.rpc.ServiceException;
+
+import fr.uge.ifservice.bank.Bank;
+import fr.uge.ifservice.bank.BankServiceLocator;
+import fr.uge.ifservice.converter.Converter;
+import fr.uge.ifservice.converter.ConverterServiceLocator;
 import fr.uge.ifshare.rmi.common.IAdvertising;
 import fr.uge.ifshare.rmi.common.IOnlineShop;
-import fr.uge.ifshare.rmi.common.OnlineShop;
 import fr.uge.ifshare.rmi.common.user.IUser;
 import fr.uge.ifshare.rmi.common.user.IUserDatabase;
 
 public class IfService {
 
-	//private Bank bankService;
-	//private Converter converterService;
+	private Bank bankService;
+	private Converter converterService;
 	private IOnlineShop shop;
 	private IUserDatabase usersDB;
 	
-	public IfService() throws MalformedURLException, RemoteException, NotBoundException {
-		//bankService = new BankServiceLocator().getBank();
-		//converterService = new ConverterServiceLocator().getConverter();
+	public IfService() throws MalformedURLException, RemoteException, NotBoundException, ServiceException {
+		bankService = new BankServiceLocator().getBank();
+		converterService = new ConverterServiceLocator().getConverter();
         shop = (IOnlineShop) Naming.lookup("onlineshop");
         usersDB = (IUserDatabase) Naming.lookup("userdata");
 	}
 	
 	
 	
-	public List<IAdvertising> getSoldProductsList() {
+	public Object[] getSoldProductsList()  throws RemoteException{
 		return shop.getAdvertisingsWhereProductWasBought();
 	}
 	
@@ -40,16 +44,25 @@ public class IfService {
 	 * Si oui, il achete le produit, et on fait un débit, + on change l'etat du produit/annonce
 	 * Si non, il peut rien acheter
 	 */
-	public String buyProduct(IAdvertising ad, IUser client) {
+	public String buyProduct(IAdvertising ad, String clientName) throws RemoteException {
 		
-		if (bank.clientCanBuy(client.getPseudo(), ad.getPrice()) {
-			bank.debit(client.getPseudo(), ad.getPrice());
-			shop.buyProduct(client, ad, 1);
-			bank.cashIn(usersDB.getUserById(ad.getSellerPseudo()), ad.getPrice());
+		if (bankService.clientCanBuy(clientName, ad.getPrice())) {
+			bankService.debit(clientName, ad.getPrice());
+			shop.buyProduct(usersDB.getUserById(clientName), ad, 1);
+			bankService.credit(usersDB.getUserById(ad.getSellerPseudo()).getPseudo(), ad.getPrice());
 		
 			return "You bought a(n) " + ad.getProduct().getName() + " for " + ad.getPrice();
 		}
 		return "You can't buy a(n) " + ad.getProduct().getName() + ". Not enough money.";
 	}
+	
+	
+	/*public IAdvertising[] toObjects(List<IAdvertising> ads) {
+		IAdvertising[] adsToObjects = new IAdvertising[ads.size()];
+		for (int i = 0; i < ads.size(); i++) {
+			adsToObjects[i] = ads.get(i);
+		}
+		return adsToObjects;
+	}*/
 	
 }

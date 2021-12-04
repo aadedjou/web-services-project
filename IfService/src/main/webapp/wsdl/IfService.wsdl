@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://ifservice.uge.fr" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ifservice.uge.fr" xmlns:intf="http://ifservice.uge.fr" xmlns:tns1="http://common.rmi.ifshare.uge.fr" xmlns:tns2="http://user.common.rmi.ifshare.uge.fr" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://ifservice.uge.fr" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://user.common.rmi.ifshare.uge.fr"/>
+   <import namespace="http://common.rmi.ifshare.uge.fr"/>
+   <element name="getSoldProductsList">
+    <complexType/>
+   </element>
+   <element name="getSoldProductsListResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getSoldProductsListReturn" type="xsd:anyType"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="buyProduct">
+    <complexType>
+     <sequence>
+      <element name="ad" type="xsd:anyType"/>
+      <element name="client" type="xsd:anyType"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="buyProductResponse">
+    <complexType>
+     <sequence>
+      <element name="buyProductReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="getSoldProductsListResponse">
+
+      <wsdl:part element="impl:getSoldProductsListResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="buyProductResponse">
+
+      <wsdl:part element="impl:buyProductResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getSoldProductsListRequest">
+
+      <wsdl:part element="impl:getSoldProductsList" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="buyProductRequest">
+
+      <wsdl:part element="impl:buyProduct" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="IfService">
+
+      <wsdl:operation name="getSoldProductsList">
+
+         <wsdl:input message="impl:getSoldProductsListRequest" name="getSoldProductsListRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getSoldProductsListResponse" name="getSoldProductsListResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="buyProduct">
+
+         <wsdl:input message="impl:buyProductRequest" name="buyProductRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:buyProductResponse" name="buyProductResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="IfServiceSoapBinding" type="impl:IfService">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="getSoldProductsList">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getSoldProductsListRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getSoldProductsListResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="buyProduct">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="buyProductRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="buyProductResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="IfServiceService">
+
+      <wsdl:port binding="impl:IfServiceSoapBinding" name="IfService">
+
+         <wsdlsoap:address location="http://localhost:8080/IfService/services/IfService"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

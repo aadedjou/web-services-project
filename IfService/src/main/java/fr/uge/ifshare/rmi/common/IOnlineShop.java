@@ -20,5 +20,5 @@ public interface IOnlineShop extends Remote {
     
     
     // USED BY IFSERVICE
-    List<IAdvertising> getAdvertisingsWhereProductWasBought();
+    IAdvertising[] getAdvertisingsWhereProductWasBought() throws RemoteException;
 }
