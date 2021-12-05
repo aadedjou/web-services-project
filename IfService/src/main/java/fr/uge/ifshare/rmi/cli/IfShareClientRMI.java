@@ -13,10 +13,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class IfShareClientRMI {
@@ -38,7 +35,11 @@ public class IfShareClientRMI {
     }
 
     private void disconnectUser() {
-        controller.printMessage("(Successfully disconnected from " + sessionUser.getPseudo() + ")");
+        try {
+            controller.printMessage("(Successfully disconnected from " + sessionUser.getPseudo() + ")");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         sessionUser = null;
         displayLoginMenu();
     }
@@ -47,11 +48,10 @@ public class IfShareClientRMI {
         System.exit(0);
     }
 
-    
+
     private List<IAdvertising> notificationList() {
-        List<IAdvertising> list = null;
         try {
-            list = shop.getAdvertisings().stream()
+            return shop.getAdvertisings().stream()
               .filter(ad -> ad.firstOrderInWaitingList()
                 .map(e -> e.getKey().equals(sessionUser))
                 .orElse(false))
@@ -59,9 +59,9 @@ public class IfShareClientRMI {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return list;
+        return new ArrayList<>();
     }
-    
+
 
     // menus
     private void displayLoginMenu() {
@@ -76,11 +76,14 @@ public class IfShareClientRMI {
 
     private void tryLogin() {
         final IUser[] user = new IUser[1];
+        final String[] credentials = new String[2];
 
         controller.inputString("Enter your IfService pseudo:",
           (p) -> {
               try {
                   user[0] = users.getUserById(p);
+                  credentials[0] = user[0].getPassword();
+                  credentials[1] = user[0].getPseudo();
               } catch (RemoteException e) {
                   e.printStackTrace();
               }
@@ -90,8 +93,8 @@ public class IfShareClientRMI {
         );
 
         controller.inputString("Enter your password:",
-          (p) -> user[0].getPassword().equals(p),
-          "Wrong password for '" + user[0].getPseudo() + "'"
+          (p) -> credentials[0].equals(p),
+          "Wrong password for '" + credentials[1] + "'"
         );
         loginAs(user[0]);
     }
@@ -109,27 +112,33 @@ public class IfShareClientRMI {
 
     private void displayShopMenu() {
         Objects.requireNonNull(sessionUser);
-        controller.displayMenu(
-          "Welcome back, " + sessionUser.getShortenFullName() + " !\n" +
-            "What can we do for you ?",
-          new Choice("Do some shopping", this::doShopping),
-          new Choice("Sell a product", this::createAd),
-          new Choice("Notifications" + (notificationList().isEmpty() ? "" : " (" + notificationList().size() + ")"),
-            this::checkNotifications),
-          new Choice("Rate my purchases", this::ratePurchases),
-          new Choice("My sales", this::viewSales),
-          new Choice("Disconnect from account", this::disconnectUser),
-          new Choice("Exit", this::exitSession)
-        );
+        try {
+            String name = sessionUser.getShortenFullName();
+            controller.displayMenu(
+              "Welcome back, " + name + " !\n What can we do for you ?",
+              new Choice("Do some shopping", this::doShopping),
+              new Choice("Sell a product", this::createAd),
+              new Choice("Notifications" + (notificationList().isEmpty() ? "" : " (" + notificationList().size() + ")"),
+                this::checkNotifications),
+              new Choice("Rate my purchases", this::ratePurchases),
+              new Choice("My sales", this::viewSales),
+              new Choice("Disconnect from account", this::disconnectUser),
+              new Choice("Exit", this::exitSession)
+            );
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void doShopping() {
         try {
             // TODO: add balance bank
+            String pseudo = sessionUser.getPseudo();
             IAdvertising ad = controller.displayMenu(
-              "Which of these products are you looking for ?   -   Your balance: ", shop.getAdvertisings().stream()
-              																							  .filter(adv -> !adv.getSellerPseudo().equals(sessionUser.getPseudo()))
-              																							  .collect(Collectors.toList()));
+              "Which of these products are you looking for ?   -   Your balance: ",
+              shop.getAdvertisings().stream()
+                .filter(adv -> !adv.getSellerPseudo().equals(pseudo))
+                .collect(Collectors.toList()));
             int qty = 1;
 
             if (ad == null) return;
@@ -143,11 +152,19 @@ public class IfShareClientRMI {
                     "Do you wish to be notified when '" + ad.getProduct().getName() + "' becomes available again ?",
                   new Choice("Yes", () -> controller.printMessage(
                     "You will receive a notification when the product will be back in the shop")),
-                  new Choice("No thanks", ad::desistFirstUserFromWaitingList)
+                  new Choice("No thanks", () -> {
+                      try {
+                          ad.desistFirstUserFromWaitingList();
+                      } catch (RemoteException e) {
+                          e.printStackTrace();
+                      }
+                  })
                 );
             } else if (qty > 0) {
-                controller.printMessage("Successfully bought (" + qty + ") " + ad.getProduct().getName() +
-                                          (qty == 1 ? "" : "s") + " from " + ad.getSellerPseudo());
+                controller.printMessage(
+                  "Successfully bought (" + qty + ") " + ad.getProduct().getName() +
+                    (qty == 1 ? "" : "s") + " from " + ad.getSellerPseudo()
+                );
                 sessionUser.addToHistory(ad);
             }
         } catch (RemoteException e) {
@@ -163,7 +180,7 @@ public class IfShareClientRMI {
             String desc = controller.inputString("Enter a quick description for '" + name + "'.");
             int quantity = controller.inputPositiveInt("How many '" + name + "s' do you want to put up for sale ?");
             double price = controller.inputDouble(
-              "Set a price (â‚¬) for your product. (1 unit)", p -> p > 0, "Value be positive."
+              "Set a price (€) for your product. (1 unit)", p -> p > 0, "Value be positive."
             );
             shop.createAdvertising(sessionUser, new Product(name, state), quantity, price, desc);
         } catch (RemoteException e) {
@@ -175,29 +192,44 @@ public class IfShareClientRMI {
     private void checkNotifications() {
         IAdvertising ad = controller.displayMenu("Here are the products that you asked to be notified for.", notificationList());
         if (ad == null) return;
+        int qty;
 
-        int qty = ad.firstOrderInWaitingList().map(Map.Entry::getValue).orElse(0);
-        controller.displayMenu("Do you still want this product ?",
-          new Choice("Yes, I wanna buy " + qty + " " + ad.getProduct().getName() + (qty == 1 ? "" : "s") + " right now",
-            () -> {
-                try {
-                    shop.buyProduct(sessionUser, ad, qty);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+        try {
+            qty = ad.firstOrderInWaitingList().map(Map.Entry::getValue).orElse(0);
+            controller.displayMenu("Do you still want this product ?",
+              new Choice(
+                "Yes, I wanna buy " + qty + " " + ad.getProduct().getName() + (qty == 1 ? "" : "s") + " right now",
+                () -> {
+                    try {
+                        shop.buyProduct(sessionUser, ad, qty);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }),
-          new Choice("No, I'm no longer interested.", ad::desistFirstUserFromWaitingList),
-          new Choice("Do nothing")
-        );
+              ),
+              new Choice("No, I'm no longer interested.", () -> {
+                  try {
+                      ad.desistFirstUserFromWaitingList();
+                  } catch (RemoteException e) {
+                      e.printStackTrace();
+                  }
+              }),
+              new Choice("Do nothing")
+            );
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
         displayShopMenu();
     }
 
     private void viewSales() {
         try {
+            String pseudo = sessionUser.getPseudo();
             IAdvertising ad = controller.displayMenu(
               "Here are the products that you are currently selling. Pick an ad to update/delete it.",
               shop.getAdvertisings().stream()
-                .filter(adv -> Objects.equals(adv.getSellerPseudo(), sessionUser.getPseudo()))
+                .filter(adv -> Objects.equals(adv.getSellerPseudo(), pseudo))
                 .collect(Collectors.toList())
             );
             if (ad == null) return;
@@ -235,8 +267,11 @@ public class IfShareClientRMI {
         try {
             IAdvertising ad = controller.displayMenu("Select one of your recent purchases to rate it:", sessionUser.getHistory());
             if (ad == null) return;
-            double grade = controller.inputDouble("Assign a grade to " + ad.getSellerPseudo() + "'s product:",
-              r -> 0 <= r && r <= 5, "Grade must be between 0 and 5.");
+
+            double grade = controller.inputDouble(
+              "Assign a grade to " + ad.getSellerPseudo() + "'s product:",
+              r -> 0 <= r && r <= 5, "Grade must be between 0 and 5."
+            );
             shop.addRating(ad, sessionUser, grade);
         } catch (RemoteException e) {
             e.printStackTrace();

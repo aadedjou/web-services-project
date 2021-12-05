@@ -3,26 +3,34 @@ package fr.uge.ifshare.rmi.common;
 import fr.uge.ifshare.rmi.common.product.Product;
 import fr.uge.ifshare.rmi.common.user.IUser;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.Optional;
 
-public interface IAdvertising {
+public interface IAdvertising extends Remote {
 
-    String getSellerPseudo();
+    String getSellerPseudo() throws RemoteException;
 
-    int getQuantity();
+    int getQuantity() throws RemoteException;
 
-    Product getProduct();
+    Product getProduct() throws RemoteException;
 
 
-    Optional<Map.Entry<IUser, Integer>> firstOrderInWaitingList();
+    Optional<Map.Entry<IUser, Integer>> firstOrderInWaitingList() throws RemoteException;
 
-    void addUserToWaitingList(IUser sessionUser, int quantity);
+    void addUserToWaitingList(IUser sessionUser, int quantity) throws RemoteException;
 
-    void addRating(IUser sessionUser, double rating);
+    void addRating(IUser sessionUser, double rating) throws RemoteException;
 
-    void desistFirstUserFromWaitingList();
+    void desistFirstUserFromWaitingList() throws RemoteException;
 
-    void updateQuantity(int newQty);
-    void addQuantity(int addedQty);
+    void updateQuantity(int newQty) throws RemoteException;
+    void addQuantity(int addedQty) throws RemoteException;
+    
+    
+    // USED BY IFSERVICE
+    public double getPrice() throws RemoteException;
+    public boolean getProductWasBought() throws RemoteException;
+    public String toString();
 }

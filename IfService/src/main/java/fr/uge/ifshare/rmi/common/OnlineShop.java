@@ -6,8 +6,10 @@ import fr.uge.ifshare.rmi.common.user.IUser;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
     private final List<Advertising> advertisings = new ArrayList<>();
@@ -22,7 +24,7 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
 
 
     @Override
-    public void createAdvertising(IUser user, Product product, int quantity, double price, String desc) {
+    public void createAdvertising(IUser user, Product product, int quantity, double price, String desc) throws RemoteException {
         Advertising ad = new Advertising(product, user.getPseudo(), quantity, price, desc);
         if (adCanBeCreated(ad)) {
             advertisings.add(ad);
@@ -80,7 +82,28 @@ public class OnlineShop extends UnicastRemoteObject implements IOnlineShop {
         if (!adv.hasSufficientQuantity(quantity)) return false;
         // sinon on effectue une transaction
         adv.performTransaction();
+        adv.setProductWasBought();
         return true;
     }
+
+    
+    //USED BY IFSERVICE
+    
+	@Override
+	public IAdvertising[] getAdvertisingsWhereProductWasBought() {
+		List<IAdvertising> adsToObjects = advertisings.stream()
+										.filter(ad -> ad.getProductWasBought())
+										.collect(Collectors.toList());
+		
+		return adsToObjects.toArray(new IAdvertising[adsToObjects.size()]);	
+	}
+
+	@Override
+	public Advertising getAdvertisingByProductNameAndSeller(String productName, String sellerName)
+			throws RemoteException {
+		return advertisings.stream()
+						   .filter(ad -> ad.getProduct().getName().equals(productName) && ad.getSellerPseudo().equals(sellerName)).findFirst().get();
+	}
+    
 }
 

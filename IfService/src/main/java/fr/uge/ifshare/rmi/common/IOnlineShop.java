@@ -17,4 +17,10 @@ public interface IOnlineShop extends Remote {
     void addRating(IAdvertising ad, IUser sessionUser, double grade) throws RemoteException;
 
     void removeAd(IAdvertising ad) throws RemoteException;
+    
+    
+    // USED BY IFSERVICE
+    IAdvertising[] getAdvertisingsWhereProductWasBought() throws RemoteException;
+    
+    Advertising getAdvertisingByProductNameAndSeller(String productName, String sellerName) throws RemoteException;
 }

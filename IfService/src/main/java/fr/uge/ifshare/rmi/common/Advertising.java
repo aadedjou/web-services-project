@@ -5,6 +5,7 @@ import fr.uge.ifshare.rmi.common.product.Rating;
 import fr.uge.ifshare.rmi.common.user.IUser;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -22,7 +23,10 @@ public class Advertising implements Serializable, IAdvertising {
     private final ArrayList<AdvertisingObserver> observers = new ArrayList<>();
     private final LinkedHashMap<IUser, Integer> waitingList = new LinkedHashMap<>();
     private final Lock lock = new Lock();
-
+    
+    //USED BY IFSERVICE
+    private boolean productWasBought;
+    
     public Advertising(Product product, String sellerPseudo, int quantity, double price, String desc) {
         if (quantity < 0) {
             throw new IllegalArgumentException("You can't put a negative quantity (" + quantity + ")");
@@ -37,6 +41,7 @@ public class Advertising implements Serializable, IAdvertising {
         this.price = price;
         this.quantity = quantity;
         register(new WaitingListNotifier(this));
+        productWasBought = false;
     }
 
     private class WaitingListNotifier implements AdvertisingObserver {
@@ -49,8 +54,15 @@ public class Advertising implements Serializable, IAdvertising {
         private void notifyFirstUser() {
             waitingList.keySet().stream()
               .findFirst()
-              .ifPresent(u -> u.receiveMessage(
-                "The product '" + product.getName() + "' by " + sellerPseudo + " is now available !")
+              .ifPresent(u -> {
+				try {
+					u.receiveMessage(
+					    "The product '" + product.getName() + "' by " + sellerPseudo + " is now available !");
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
               );
         }
 
@@ -91,6 +103,7 @@ public class Advertising implements Serializable, IAdvertising {
         return product;
     }
 
+    @Override
     public double getPrice() {
         return price;
     }
@@ -159,5 +172,16 @@ public class Advertising implements Serializable, IAdvertising {
             waitingList.remove(order.getKey());
         });
         // si on peut envoyer une notification au nouveau premier, le faire ici
+    }
+    
+    
+    //USED BY IFSERVICE
+    public void setProductWasBought() {
+    	this.productWasBought = true;
+    }
+    
+    @Override
+    public boolean getProductWasBought() {
+    	return this.productWasBought;
     }
 }

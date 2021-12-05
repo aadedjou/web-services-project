@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
-encoding//src/main/java/fr/uge/ifshare/rmi/common/controller/ConsoleController.java=UTF-8
+encoding//src/main/java/fr/uge/ifservice/bank/Bank.java=UTF-8
+encoding//src/main/java/fr/uge/ifservice/bank/BankService.java=UTF-8
+encoding//src/main/java/fr/uge/ifservice/bank/BankServiceLocator.java=UTF-8
+encoding//src/main/java/fr/uge/ifservice/bank/BankSoapBindingStub.java=UTF-8

@@ -11,13 +11,13 @@ public class UserDatabase extends UnicastRemoteObject implements IUserDatabase {
     private final List<IUser> users = new ArrayList<>();
 
     public UserDatabase() throws RemoteException {
-		registerUser("Sami", "Ben Chakal", "dev");
-		registerUser("Sebastien", "Petanque", "dev");
-        registerUser("Killian", "Blancheur", "user");
-        registerUser("Melissa", "Ammoche", "user");
-        registerUser("Myriam", "Poussin", "user");
-        registerUser("Yohan", "Chameau", "user");
-        registerUser("Ruben", "Charo", "user");
+		registerUser("Sami", "Ben Lakhal", "dev");
+		registerUser("Sebastien", "Postansque", "dev");
+        registerUser("Killian", "Blanchard", "user");
+        registerUser("Melissa", "Ammiche", "user");
+        registerUser("Myriam", "Pouchain", "user");
+        registerUser("Yohan", "Rameau", "user");
+        registerUser("Ruben", "Sero", "user");
     }
 
     @Override
@@ -29,10 +29,17 @@ public class UserDatabase extends UnicastRemoteObject implements IUserDatabase {
 
     @Override
     public IUser getUserById(String pseudo) {
-        return users.stream()
-          .filter(u -> u.getPseudo()
-            .equals(Objects.requireNonNull(pseudo))).findFirst()
-          .orElse(null);
+    	return users.stream()
+    	          .filter(u -> {
+    	              try {
+    	                  return u.getPseudo().equals(Objects.requireNonNull(pseudo));
+    	              } catch (RemoteException e) {
+    	                  e.printStackTrace();
+    	              }
+    	              return false;
+    	          })
+    	          .findFirst()
+    	          .orElse(null);
     }
 
     @Override
