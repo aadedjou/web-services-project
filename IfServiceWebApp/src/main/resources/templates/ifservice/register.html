@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>OnlineShop - Authentification</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<h1 class="center"><a href="home"> 🏪 OnlineShop 🏪 </a></h1>
+
+<div class="center">
+    <form action="#" class="line center flex-y" method="post"
+          th:action="@{register}"
+          th:object="${regCredentials}">
+
+        <h3 class="error-msg" th:if="${pageErrorMessage} != ''" th:text="${pageErrorMessage}"></h3>
+        <h2>Register</h2>
+        <div class="flex">
+            <div class="flex-y">
+                <div class="input-box">
+                    First name <br> <input th:field="*{firstName}" type="text"> <br>
+                    <div class="error-msg" th:errors="*{firstName}" th:if="${#fields.hasErrors('firstName')}"></div>
+                </div>
+
+                <div class="input-box">
+                    Last name <br> <input th:field="*{lastName}" type="text"> <br>
+                    <div class="error-msg" th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></div>
+                </div>
+            </div>
+            <div class="flex-y">
+                <div class="input-box">
+                    Password <br> <input th:field="*{password}" type="text"> <br>
+                    <div class="error-msg" th:errors="*{password}" th:if="${#fields.hasErrors('password')}"></div>
+                </div>
+                <div style="font-size: 10pt; text-align: right;">
+                    Already have an account ? <br>
+                    <a href="login">Login here.</a>
+                </div>
+            </div>
+        </div>
+        <button type="submit">Register & Login</button>
+    </form>
+</div>
+</body>
+
+</html>

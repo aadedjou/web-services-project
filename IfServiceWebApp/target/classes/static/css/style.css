@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap");
+
+html,
+body, button {
+    font-family: "Gotham", sans-serif;
+}
+
+h1 a {
+    color: rgb(100, 100, 225);
+    text-decoration: none !important;
+}
+
+button {
+    margin: 25px 0;
+    font-family: "Gotham", sans-serif;
+}
+
+.border {
+    border: #00ffe1 solid 2px;
+}
+
+.line {
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-y {
+    display: flex;
+    flex-direction: column;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-y {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.input-box {
+    font-family: "Raleway", serif;
+    margin: 20px;
+    width: 80%;
+    display: inline-block;
+}
+
+.input-box input {
+    width: 150px;
+}
+
+.form-box {
+    width: 225px;
+}
+
+.error-msg {
+    font-family: "Gotham", sans-serif;
+    color: rgb(250, 50, 100);
+}
+
+.advertising {
+    text-align: center;
+    max-width: 300px;
+    display: inline-block;
+    border: solid rgb(200, 200, 230) 5px;
+    padding: 10px;
+    border-radius: 10px;
+    transform: scale(0.8);
+}
+
+.advertising h1 {
+    margin-bottom: 0;
+    color: rgb(100, 100, 225);
+}
