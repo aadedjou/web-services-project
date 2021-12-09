@@ -2,69 +2,59 @@
 <html lang="" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>OnlineShop - Authentification</title>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <title>OnlineShop - Sell</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
+    <h1 class="center"><a href="home"> 🏪 OnlineShop 🏪 </a></h1>
 
-<h1 class="center"><a href="home"> 🏪 OnlineShop 🏪 </a></h1>
+    <div class="center">
+        <!--/*@thymesVar id="adv" type="fr.uge.ifservice.springboot.AdTemplate"*/-->
+        <form action="#" class="line center flex-y" method="post" th:action="@{sell}" th:object="${adv}">
 
-<div class="center">
-    <!--/*@thymesVar id="adv" type="fr.uge.ifservice.springboot.AdTemplate"*/-->
-    <form action="#" class="line center flex-y" method="post"
-          th:action="@{sell}"
-          th:object="${adv}">
-
-        <div class="flex-y form-box">
             <h2>Create your advertising:</h2>
-
-            <div class="flex-y">
-                <div class="input-box">
+            <div class="flex-y large-form-box">
+                <div class="flex-y ">
                     <div class="input-box">
-                        Name <br> <input th:field="*{name}" type="text"> <br>
-                        <div class="error-msg" th:errors="*{name}" th:if="${#fields.hasErrors('pseudo')}"></div>
+                        Name of the product <br> <input th:field="*{name}" type="text"> <br>
+                        <div class="error-msg" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
                     </div>
 
                     <div class="input-box">
-                        State of the product: <br>
-                        <div>
-                            <input checked id="new" name="drone" type="radio"
-                                   value="new">
-                            <label for="new">New</label>
-                        </div>
-                        <div>
-                            <input checked id="used" name="drone" type="radio"
-                                   value="used">
-                            <label for="used">Used</label>
-                        </div>
-                        <div>
-                            <input checked id="det" name="drone" type="radio"
-                                   value="deteriorated">
-                            <label for="det">Deteriorated</label>
-                        </div>
+                        Quick description <br> <textarea  th:field="*{desc}"></textarea>
                     </div>
                 </div>
 
-
-                <div class="flex-y">
+                <div class="flex-y ">
                     <div class="input-box">
-                        First name <br> <input th:field="*{quantity}" type="text"> <br>
-                        <div class="error-msg" th:errors="*{quantity}" th:if="${#fields.hasErrors('firstName')}"></div>
-                    </div>
-
-                    <div class="input-box">
-                        Last name <br> <input th:field="*{price}" type="text"> <br>
-                        <div class="error-msg" th:errors="*{price}" th:if="${#fields.hasErrors('lastName')}"></div>
+                    State: <br>
+                    <div th:each="enum : ${states}">
+                        <input type="radio" th:value="${enum}" />
+                        <label  th:text="${enum}"></label>
                     </div>
                 </div>
 
+                <div class="center line">
+                    <div class="input-box">
+                        Quantity <br> <input th:field="*{quantity}" type="number"> <br>
+                        <div class="error-msg" th:errors="*{quantity}" th:if="${#fields.hasErrors('quantity')}"></div>
+                    </div>
+
+                    <div class="input-box">
+                        Price <br> <input th:field="*{price}" type="number">€ <br>
+                        <div class="error-msg" th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <button type="submit">Login</button>
-    </form>
-</div>
+            <div class="flex center">
+                <a href="home">↩ Back</a>
+                <button type="submit">Sell</button>
+            </div>
+            </div>
+        </form>
+    </div>
 </body>
 
 </html>

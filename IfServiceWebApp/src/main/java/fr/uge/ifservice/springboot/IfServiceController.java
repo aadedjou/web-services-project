@@ -2,6 +2,7 @@ package fr.uge.ifservice.springboot;
 
 import fr.uge.ifshare.rmi.common.IOnlineShop;
 import fr.uge.ifshare.rmi.common.product.Product;
+import fr.uge.ifshare.rmi.common.product.State;
 import fr.uge.ifshare.rmi.common.user.IUser;
 import fr.uge.ifshare.rmi.common.user.IUserDatabase;
 import fr.uge.ifshare.rmi.common.user.User;
@@ -14,20 +15,53 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.List;
 
 import static fr.uge.ifservice.springboot.Application.shop;
 import static fr.uge.ifservice.springboot.Application.users;
 
 @Controller
-@SessionAttributes({"shop", "users"})
+@SessionAttributes({"states", "shop", "users", "adv", "user", "regCredentials", "loginCredentials", "pageErrorMessage"})
 public class IfServiceController {
+    @ModelAttribute("states")
+    public List<State> populateAccommodationTypes() {
+        return Arrays.asList(State.values());
+    }
+
     @ModelAttribute("shop")
     public IOnlineShop shop() {
         return shop;
     }
+
     @ModelAttribute("users")
     public IUserDatabase users() {
         return users;
+    }
+
+    @ModelAttribute("adv")
+    public AdTemplate adv() {
+        return new AdTemplate();
+    }
+
+    @ModelAttribute("user")
+    public User user() {
+        return new User();
+    }
+
+    @ModelAttribute("loginCredentials")
+    public LoginCredentials loginCredentials() {
+        return new LoginCredentials();
+    }
+
+    @ModelAttribute("regCredentials")
+    public RegisterCredentials regCredentials() {
+        return new RegisterCredentials();
+    }
+
+    @ModelAttribute("pageErrorMessage")
+    public String pageErrorMessage() {
+        return "";
     }
 
     @GetMapping("/")
@@ -37,7 +71,7 @@ public class IfServiceController {
 
     @GetMapping("{path:[a-z]+}")
     public String redirectPath(@PathVariable("path") String path) {
-        return "redirect:/ifservice/" + path;
+        return "ifservice".equals(path) ? redirectRoot() : "redirect:/ifservice/" + path;
     }
 
     @GetMapping("/ifservice/login")
@@ -88,6 +122,7 @@ public class IfServiceController {
                                       Model model,
                                       HttpServletRequest request) throws RemoteException {
         if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(System.out::println);
             return "ifservice/register";
         }
 
@@ -100,12 +135,6 @@ public class IfServiceController {
 
     @GetMapping("/ifservice/home")
     public String shopHome(Model model, HttpSession session) {
-        model.addAttribute("loginCredentials", new LoginCredentials());
-        model.addAttribute("regCredentials", new RegisterCredentials());
-        model.addAttribute("adv", new AdTemplate());
-        model.addAttribute("user", new User());
-        model.addAttribute("shop", shop);
-        model.addAttribute("users", users);
 
         if (session.getAttribute("SESSION_USER") == null) {
             return "redirect:/ifservice/login";
@@ -124,29 +153,26 @@ public class IfServiceController {
     }
 
     @PostMapping("/ifservice/sell")
-    public String processSellForm(@Valid AdTemplate product,
+    public String processSellForm(@Valid AdTemplate ad,
                                   BindingResult bindingResult,
-                                  Model model,
-                                  HttpServletRequest request) throws RemoteException {
+                                  Model model) throws RemoteException {
         if (bindingResult.hasErrors()) {
-            return "ifservice/register";
+            return "ifservice/sell";
         }
 
         IOnlineShop shop = (IOnlineShop) model.getAttribute("shop");
         IUser user = (IUser) model.getAttribute("user");
 
-        if (shop == null) {
-            return "redirect:/ifservice/home";
-        }
+        if (shop == null) return redirectRoot();
 
         shop.createAdvertising(
-          user, new Product(product.getName(), product.getState()), product.getQuantity(),
-          product.getPrice(), product.getDesc()
+          user, new Product(ad.getName(), State.NEW), ad.getQuantity(), ad.getPrice(), ad.getDesc()
         );
         return "ifservice/home";
     }
 
-    @PostMapping("/ifservice/disconnect")
+    @GetMapping("/ifservice/disconnect")
+    @SuppressWarnings("unused")
     public String disconnect(Model model, HttpSession session) {
         session.setAttribute("SESSION_USER", null);
         return "redirect:/ifservice/login";

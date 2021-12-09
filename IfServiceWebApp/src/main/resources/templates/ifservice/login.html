@@ -3,26 +3,23 @@
 
 <head>
     <title>OnlineShop - Authentification</title>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
+    <h1 class="center"><a href="home"> 🏪 OnlineShop 🏪 </a></h1>
 
-<h1 class="center"><a href="home"> 🏪 OnlineShop 🏪 </a></h1>
+    <div class="center">
+        <form action="#" class="line center flex-y" method="post" th:action="@{login}" th:object="${loginCredentials}">
 
-<div class="center">
-    <form action="#" class="line center flex-y" method="post"
-          th:action="@{login}"
-          th:object="${loginCredentials}">
-
-        <div class="flex-y form-box">
             <h3 class="error-msg" th:if="${pageErrorMessage} != ''" th:text="${pageErrorMessage}"></h3>
-            <h2>Login</h2>
+            <div class="flex-y form-box">
+                <h2>Login</h2>
 
-            <div class="input-box">
-                Pseudo <br> <input th:field="*{pseudo}" type="text"> <br>
-                <div class="error-msg" th:errors="*{pseudo}" th:if="${#fields.hasErrors('pseudo')}"></div>
+                <div class="input-box">
+                    Pseudo <br> <input th:field="*{pseudo}" type="text"> <br>
+                    <div class="error-msg" th:errors="*{pseudo}" th:if="${#fields.hasErrors('pseudo')}"></div>
             </div>
 
             <div class="input-box">

@@ -1,15 +1,23 @@
 package fr.uge.ifservice.springboot;
 
 import fr.uge.ifshare.rmi.common.product.State;
+import org.springframework.lang.NonNull;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 public class AdTemplate {
-    private String name;
-    private State state;
-    private String desc;
+    @NonNull
+    @NotBlank(message = "Missing field")
+    private String name = "";
+    private String desc = "";
+    @Positive(message = "Field must be positive")
     private int quantity;
+    @Positive(message = "Field must be positive")
     private double price;
 
-    public AdTemplate() {}
+    public AdTemplate() {
+    }
 
     public String getName() {
         return name;
@@ -17,14 +25,6 @@ public class AdTemplate {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     public String getDesc() {

@@ -2,19 +2,16 @@
 <html lang="" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>OnlineShop - Authentification</title>
+    <title>OnlineShop - Create account</title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-
 <h1 class="center"><a href="home"> 🏪 OnlineShop 🏪 </a></h1>
 
 <div class="center">
-    <form action="#" class="line center flex-y" method="post"
-          th:action="@{register}"
-          th:object="${regCredentials}">
+    <form action="#" class="line center flex-y" method="post" th:action="@{register}" th:object="${regCredentials}">
 
         <h3 class="error-msg" th:if="${pageErrorMessage} != ''" th:text="${pageErrorMessage}"></h3>
         <h2>Register</h2>

@@ -2,57 +2,55 @@
 <html lang="">
 
 <head>
-    <title>OnlineShop - Authentification</title>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <title>OnlineShop</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
+    <h1 class="center"><a href="home"> 🏪 OnlineShop 🏪</a></h1>
 
-<h1 class="center"><a href="home"> 🏪 OnlineShop 🏪</a></h1>
+    <div class="center-y">
+        <!--/*@thymesVar id="user" type="fr.uge.ifshare.rmi.common.user.IUser"*/-->
+        <h2 th:text="'Welcome, ' + ${user.getShortenFullName} + ' !'"></h2>
+        <div class="center menu">
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            <div><a href="sell"> ➕ Sell a product </a></div>
 
-<div class="center-y">
-    <h2 th:text="'Welcome, ' + ${user.getShortenFullName} + ' !'"></h2>
-    <div class="center">
-        <div class="spacer"></div>
-        <div class="spacer"></div>
-        <div><a href="sell"> Sell a product </a></div>
+            <div class="spacer"></div>
+            <div><a href="my-sells"> 💰 My Purchases/Sales </a></div>
+            <div class="spacer"></div>
+            
+            <div><a href="disconnect"> 🚪🏃🏾‍♂️ Disconnect </a></div>
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+        </div>
 
-        <div class="spacer"></div>
-        <div><a href="my-sells"> My sells </a></div>
-        <div class="spacer"></div>
+        <div class="center line">
+            <div class="line">
+                <h3> Products for sale:</h3>
+                <div class="advertising" th:each="ad : ${shop.getAdvertisings}">
+                    <!--/*@thymesVar id="ad" type="fr.uge.ifshare.rmi.common.IAdvertising"*/-->
+                    <div class="center">
+                        <div th:text="'by: ' + ${ad.getSellerPseudo}"></div>
+                        <div class="spacer"></div>
+                        <div th:text="${ad.getDate}"></div>
+                    </div>
+                    <h1 th:text="${ad.getProduct.getName}"></h1>
+                    <h5 th:text="'(' + ${ad.getProduct.getState} + ')'"></h5>
+                    <p th:text="${ad.getDescription}"></p>
 
-        <form action="disconnect" method="post">
-            <button type="submit">Disconnect</button>
-        </form>
-        <div class="spacer"></div>
-        <div class="spacer"></div>
-    </div>
-    <div class="center line">
-        <div class="line">
-            <h3> Products for sale:</h3>
-            <div class="advertising" th:each="ad : ${shop.getAdvertisings}">
-                <!--/*@thymesVar id="ad" type="fr.uge.ifshare.rmi.common.IAdvertising"*/-->
-                <div class="center">
-                    <div th:text="'by: ' + ${ad.getSellerPseudo}"></div>
-                    <div class="spacer"></div>
-                    <div th:text="${ad.getDate}"></div>
+                    <h2 th:text="${ad.getPrice} + '€'"></h2>
+                    <p th:text=" '(' + ${ad.getQuantity} + ' left)'"></p>
+
+                    <form action="home" class="line center flex-y" method="post">
+                        <button type="submit">Buy</button>
+                    </form>
                 </div>
-                <h1 th:text="${ad.getProduct.getName}"></h1>
-                <h5 th:text="'(' + ${ad.getProduct.getState} + ')'"></h5>
-                <p th:text="${ad.getDescription}"></p>
-
-                <h2 th:text="${ad.getPrice} + '€'"></h2>
-                <p th:text=" '(' + ${ad.getQuantity} + ' left)'"></p>
-
-                <form action="home" class="line center flex-y" method="post">
-                    <button type="submit">Buy</button>
-                </form>
             </div>
         </div>
     </div>
-</div>
 </body>
 
 </html>
-
